@@ -6,6 +6,11 @@
   transform: rotate(0deg);
 }
 
+.container--1440.is--relative {
+  max-width: 1480rem;
+  overflow-x: clip;
+}
+
 .navbar--dropdown--list {
   height: 0px;
   overflow: hidden !important;
