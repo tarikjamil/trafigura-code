@@ -11,11 +11,6 @@
   overflow: hidden !important;
 }
 
-.navbar.is--scrolled {
-  background-color: #fff;
-  color: black;
-}
-
 .marquee--row {
   white-space: nowrap;
   will-change: transform;
