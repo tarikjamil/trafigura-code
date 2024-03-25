@@ -98,7 +98,7 @@ $(".is--testimonials-slider").append(`
     <div class="swiper-arrows"><a href="#" class="swiper-button-prev w-inline-block"><svg class="icon--24 is--arrow" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 25" fill="none"><path d="M19 12.135H5M5 12.135L12 19.135M5 12.135L12 5.13501" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a><a href="#" class="swiper-button-next w-inline-block"><svg class="icon--24 is--arrow is--second" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 25" fill="none"><path d="M19 12.135H5M5 12.135L12 19.135M5 12.135L12 5.13501" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a></div>
 `);
 
-const swiper = new Swiper(".is--testimonials-slider", {
+const swiper = new Swiper(".is--slider", {
   direction: "horizontal",
   slidesPerView: 1, // Default to 1 slide per view for mobile and smaller viewports
   slidesPerGroup: 1,
@@ -114,8 +114,40 @@ const swiper = new Swiper(".is--testimonials-slider", {
   breakpoints: {
     // When window width is >= 992px
     992: {
-      slidesPerView: 2,
-      spaceBetween: "40rem",
+      slidesPerView: 1,
+      spaceBetween: "20rem",
+    },
+  },
+  // Navigation arrows
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
+  },
+  // And if we need scrollbar
+  scrollbar: {
+    el: ".swiper-scrollbar",
+    draggable: true,
+  },
+});
+
+const swiper2 = new Swiper(".is--circles-slider", {
+  direction: "horizontal",
+  slidesPerView: 1, // Default to 1 slide per view for mobile and smaller viewports
+  slidesPerGroup: 1,
+  spaceBetween: "20rem",
+  loop: false,
+  centeredSlides: false,
+  // If we need pagination
+  pagination: {
+    el: ".swiper-pagination",
+    clickable: true,
+  },
+  // Define breakpoints
+  breakpoints: {
+    // When window width is >= 992px
+    992: {
+      slidesPerView: 1,
+      spaceBetween: "20rem",
     },
   },
   // Navigation arrows
