@@ -11,13 +11,12 @@
   overflow: hidden !important;
 }
 
-.marquee--row {
-  white-space: nowrap;
-  will-change: transform;
-  animation-name: is--scrolling;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  position: relative;
+@media screen and (min-width: 1752px) {
+  .navbar--menu {
+    display: flex !important;
+    transform: translate3d(0rem, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg)
+      rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg) !important;
+  }
 }
 
 @keyframes is--scrolling {
