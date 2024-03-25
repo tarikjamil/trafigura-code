@@ -56,40 +56,32 @@ document.querySelectorAll("[animation=fade]").forEach(function (fadeSplitElem) {
   });
 });
 
-// ------------------ accordion ------------------ //
-$(".faq--item").on("click", function () {
-  // Reference to the current item and its response
-  let currentItem = $(this);
-  let response = $(this).find(".faq--response");
-
-  // Close other accordions when opening a new one
-  if (!currentItem.hasClass("open")) {
-    $(".faq--item.open").each(function () {
-      // Directly manipulate the response instead of triggering click
-      let otherResponse = $(this).find(".faq--response");
-      $(this).removeClass("open"); // Remove 'open' class
-      otherResponse.animate({ height: "0px" }, 500);
-    });
+// ------------------ navbar - accordion ------------------ //
+$(".navbar--dropdown-trigger").on("click", function () {
+  // Close other accordions when opening new one
+  if (!$(this).hasClass("open")) {
+    $(".navbar--dropdown-trigger.open").click();
   }
-
+  // Save the sibling of the toggle we clicked on
+  let sibling = $(this).siblings(".navbar--dropdown--list");
   let animationDuration = 500;
 
-  if (currentItem.hasClass("open")) {
+  if ($(this).hasClass("open")) {
     // Close the content div if already open
-    response.animate({ height: "0px" }, animationDuration, function () {
-      currentItem.removeClass("open"); // Ensure 'open' class is toggled off after animation
-    });
+    sibling.animate({ height: "0px" }, animationDuration);
   } else {
-    // Open the content div if closed
-    response.css("height", "auto");
-    let autoHeight = response.height();
-    response.css("height", "0px");
-    response.animate({ height: autoHeight }, animationDuration, function () {
-      response.css("height", "auto");
-      // Additional actions after opening can be added here
+    // Open the content div if already closed
+    sibling.css("height", "auto");
+    let autoHeight = sibling.height();
+    sibling.css("height", "0px");
+    sibling.animate({ height: autoHeight }, animationDuration, () => {
+      sibling.css("height", "auto");
+
+      // Scroll the page to the accordion, leaving 200 pixels from the top
     });
-    currentItem.addClass("open"); // Ensure 'open' class is toggled on after animation
   }
+  // Open and close the toggle div
+  $(this).toggleClass("open");
 });
 
 // ------------------ Swiper ------------------ //
