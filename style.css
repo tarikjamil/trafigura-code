@@ -7,8 +7,8 @@
 }
 
 .navbar--dropdown--list {
-  height: 0px;
-  overflow: hidden;
+  height: 0px !important;
+  overflow: hidden !important;
 }
 
 .navbar.is--scrolled {
