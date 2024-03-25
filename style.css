@@ -1,0 +1,39 @@
+.main-wrapper {
+  opacity: 0;
+}
+
+.faq--item.open {
+  background-color: #faf9f7;
+}
+
+.faq--item.open .faq--icon-hide {
+  opacity: 0;
+}
+
+.faq--response {
+  height: 0px;
+  overflow: hidden;
+}
+
+.navbar.is--scrolled {
+  background-color: #fff;
+  color: black;
+}
+
+.marquee--row {
+  white-space: nowrap;
+  will-change: transform;
+  animation-name: is--scrolling;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  position: relative;
+}
+
+@keyframes is--scrolling {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-1 * var(--scroll-width)));
+  }
+}
