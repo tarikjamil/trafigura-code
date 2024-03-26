@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Create radio buttons for state filter
     states.forEach((state) => {
-      const radioHtml = `<label class="radio-btn"><input type="radio" name="state" class="radio-check" value="${state}"> <span class="custom-radio"></span> ${state}</label>`;
+      const radioHtml = `<label class="radio-btn"><input type="radio" name="state" class="radio-btn-lbel" value="${state}"> <span class="radio-check"></span> ${state}</label>`;
 
       stateFilter.insertAdjacentHTML("beforeend", radioHtml);
     });
