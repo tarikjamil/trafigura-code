@@ -28,16 +28,20 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function applyCustomStyles() {
+    // First, remove any potentially conflicting inline styles and existing custom styles
     partnerItems.forEach((item) => {
-      item.classList.remove("custom-style"); // Ensure no item has the custom style initially
+      item.style.display = ""; // Remove inline display styles
+      item.classList.remove("custom-style"); // Reset custom styles
     });
 
     if (window.innerWidth >= 992) {
+      // Filter for the first item that is NOT set to 'display: none'
       const firstVisibleItem = Array.from(partnerItems).find(
-        (item) => item.style.display !== "none" && item.style.display !== ""
+        (item) => item.style.display !== "none"
       );
+
       if (firstVisibleItem) {
-        firstVisibleItem.classList.add("custom-style"); // Apply custom style to the first visible item
+        firstVisibleItem.classList.add("custom-style"); // Add custom styles to the first visible item
       }
     }
   }
