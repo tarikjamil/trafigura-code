@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const stateFilter = document.getElementById("stateFilter");
   const partnerItems = document.querySelectorAll(".partner--item");
 
-  // Function to populate filters
   function populateFilters() {
     const regions = new Set();
     const areas = new Set();
@@ -28,7 +27,36 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Filter function
+  function applyCustomStyles() {
+    partnerItems.forEach((item) => {
+      item.style.gridColumn = "";
+      const partnerItemInner = item.querySelector(".partner-item");
+      if (partnerItemInner) {
+        partnerItemInner.style.display = "";
+        partnerItemInner.style.gridTemplateColumns = "";
+        partnerItemInner.style.alignItems = "";
+        partnerItemInner.style.maxWidth = "";
+      }
+    });
+
+    if (window.innerWidth >= 992) {
+      const firstVisibleItem = Array.from(partnerItems).find(
+        (item) => item.style.display !== "none" && item.style.display !== ""
+      );
+      if (firstVisibleItem) {
+        firstVisibleItem.style.gridColumn = "span 3";
+        const firstVisibleItemInner =
+          firstVisibleItem.querySelector(".partner-item");
+        if (firstVisibleItemInner) {
+          firstVisibleItemInner.style.display = "grid";
+          firstVisibleItemInner.style.gridTemplateColumns = "2fr 1fr";
+          firstVisibleItemInner.style.alignItems = "end";
+          firstVisibleItemInner.style.maxWidth = "auto !important";
+        }
+      }
+    }
+  }
+
   function filterItems() {
     const selectedRegion = regionFilter.value;
     const selectedArea = areaFilter.value;
@@ -55,13 +83,16 @@ document.addEventListener("DOMContentLoaded", function () {
         item.style.display = "none";
       }
     });
+
+    applyCustomStyles();
   }
 
-  // Event listeners
   regionFilter.addEventListener("change", filterItems);
   areaFilter.addEventListener("change", filterItems);
-  stateFilter.addEventListener("change", filterItems); // Listens to changes in the radio buttons container
+  stateFilter.addEventListener("change", filterItems);
 
-  // Initialize
+  window.addEventListener("resize", applyCustomStyles);
+
   populateFilters();
+  applyCustomStyles(); // To ensure styles are applied initially
 });
