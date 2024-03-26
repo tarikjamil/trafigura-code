@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     areas.forEach((area) => areaFilter.add(new Option(area, area)));
 
     states.forEach((state) => {
-      const radioHtml = `<label class="radio-btn"><input type="radio" name="state" value="${state}"> <span class="custom-radio"></span> ${state}</label>`;
+      const radioHtml = `<label class="radio-btn"><input type="radio" name="state" value="${state}" class="radio-btn-lbel"> <span class="radio-check"></span> ${state}</label>`;
       stateFilter.insertAdjacentHTML("beforeend", radioHtml);
     });
   }
