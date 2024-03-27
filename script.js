@@ -96,7 +96,7 @@ $(".navbar--dropdown-trigger").on("click", function () {
 
 // ------------------ Swiper ------------------ //
 
-const swiper = new Swiper(".is--slider", {
+const swiper = new Swiper(".is--slider-resources", {
   direction: "horizontal",
   slidesPerView: 1, // Default to 1 slide per view for mobile and smaller viewports
   slidesPerGroup: 1,
