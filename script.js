@@ -159,23 +159,3 @@ const swiper2 = new Swiper(".is--circles-slider", {
     draggable: true,
   },
 });
-
-// ------------------ marquee ------------------ //
-// marquee is--scrolling
-const scrollSpeed = 50; // pixels per second, adjust as needed
-
-function updateScrollingSpeed() {
-  document.querySelectorAll(".marquee--row").forEach((element) => {
-    const scrollWidth = element.offsetWidth;
-    const duration = scrollWidth / scrollSpeed; // seconds
-
-    element.style.setProperty("--scroll-width", `${scrollWidth}px`);
-    element.style.animationDuration = `${duration}s`;
-  });
-}
-
-// Call initially
-updateScrollingSpeed();
-
-// Update on window resize
-window.addEventListener("resize", updateScrollingSpeed);
