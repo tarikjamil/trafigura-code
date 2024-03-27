@@ -132,37 +132,65 @@ const swiper = new Swiper(".is--slider", {
   },
 });
 
-const swiper2 = new Swiper(".is--circles-slider", {
-  direction: "horizontal",
-  slidesPerView: 1, // Default to 1 slide per view for mobile and smaller viewports
-  slidesPerGroup: 1,
-  spaceBetween: "20rem",
-  loop: false,
-  centeredSlides: false,
-  // If we need pagination
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-  // Define breakpoints
-  breakpoints: {
-    // When window width is >= 992px
-    992: {
-      slidesPerView: 1,
-      spaceBetween: "20rem",
+let swiper2; // Declare the swiper variable at a scope accessible by your initialization function and resize event
+
+function initializeSwiper() {
+  swiper2 = new Swiper(".is--circles-slider", {
+    direction: "horizontal",
+    slidesPerView: 3, // Default to 1 slide per view for mobile and smaller viewports
+    slidesPerGroup: 1,
+    spaceBetween: "20rem",
+    loop: false,
+    centeredSlides: false,
+    // If we need pagination
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
     },
-  },
-  // Navigation arrows
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-  // And if we need scrollbar
-  scrollbar: {
-    el: ".swiper-scrollbar",
-    draggable: true,
-  },
-});
+    // Define breakpoints
+    breakpoints: {
+      // When window width is >= 992px
+      992: {
+        slidesPerView: 1,
+        spaceBetween: "20rem",
+      },
+    },
+    // Navigation arrows
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    // And if we need scrollbar
+    scrollbar: {
+      el: ".swiper-scrollbar",
+      draggable: true,
+    },
+  });
+}
+
+function checkSwiper() {
+  const screenWidth = window.innerWidth;
+
+  // Check if the screen width is less than or equal to 992px
+  if (screenWidth <= 992) {
+    // Initialize Swiper if it's not already initialized
+    if (!swiper2) {
+      initializeSwiper();
+    }
+  } else {
+    // If screen width is greater than 992px and swiper is initialized, destroy it
+    if (swiper2) {
+      swiper2.destroy();
+      swiper2 = null; // Reset the swiper variable to allow reinitialization if needed
+    }
+  }
+}
+
+// Run checkSwiper on initial load
+checkSwiper();
+
+// Add event listener for window resize
+window.addEventListener("resize", checkSwiper);
 
 // ------------------ marquee ------------------ //
 // marquee is--scrolling
