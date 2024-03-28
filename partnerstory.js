@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const response = await fetch(apiUrl);
       const countries = await response.json();
 
+      // Clear any existing options
+      regionFilter.innerHTML = '<option value="">Region/Country</option>';
+
       // Filter the API results to only include countries that are present in the availableCountries set
       const continentCountryMap = countries.reduce((map, country) => {
         const continent = country.region;
@@ -45,13 +48,16 @@ document.addEventListener("DOMContentLoaded", function () {
       // Now, create the optgroups and options with the filtered country list
       const continents = Object.keys(continentCountryMap);
       continents.forEach((continent) => {
-        const group = document.createElement("optgroup");
-        group.label = continent;
-        regionFilter.appendChild(group);
+        // Add continent as a selectable option
+        const continentOption = new Option(continent, continent);
+        continentOption.disabled = true; // Disable it so it doesn't interfere with country selection
+        continentOption.classList.add("continent-option");
+        regionFilter.appendChild(continentOption);
 
+        // Add countries within this continent as options
         continentCountryMap[continent].forEach((country) => {
           const option = new Option(country, country);
-          group.appendChild(option);
+          regionFilter.appendChild(option);
         });
       });
     } catch (error) {
@@ -124,6 +130,21 @@ document.addEventListener("DOMContentLoaded", function () {
     applyCustomStyles();
   }
 
+  // Filter partner items by continent
+  function filterItemsByContinent(continent) {
+    partnerItems.forEach((item) => {
+      const isItemInContinent = Array.from(
+        item.querySelectorAll(".partner--region")
+      ).some((regionElement) =>
+        regionElement.textContent.trim().includes(continent)
+      );
+
+      item.style.display = isItemInContinent ? "" : "none";
+    });
+
+    applyCustomStyles();
+  }
+
   // Reset filters function
   function resetFilters() {
     regionFilter.selectedIndex = 0;
@@ -134,10 +155,18 @@ document.addEventListener("DOMContentLoaded", function () {
     filterItems();
   }
 
-  // Event listeners for filter changes
-  regionFilter.addEventListener("change", filterItems);
-  areaFilter.addEventListener("change", filterItems);
-  stateFilter.addEventListener("change", filterItems);
+  // Event listener for filter changes
+  regionFilter.addEventListener("change", (event) => {
+    const selectedOption = event.target.options[event.target.selectedIndex];
+
+    if (selectedOption.classList.contains("continent-option")) {
+      // Code to filter items by the selected continent
+      filterItemsByContinent(selectedOption.text);
+    } else {
+      // Otherwise, filter by country as before
+      filterItems();
+    }
+  });
 
   // Event listener for window resize
   window.addEventListener("resize", applyCustomStyles);
