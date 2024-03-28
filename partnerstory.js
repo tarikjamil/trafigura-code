@@ -8,43 +8,43 @@ document.addEventListener("DOMContentLoaded", function () {
   const partnerItems = document.querySelectorAll(".partner--item");
 
   // Populate filter dropdowns with unique values from partner items
-  function populateFilters() {
-    const regions = new Set();
-    const areas = new Set();
-    const states = new Set();
+  async function populateFilters() {
+    // Call an API to get countries and their continents
+    const apiUrl = "https://restcountries.com/v3.1/all"; // Example API endpoint
 
-    partnerItems.forEach((item) => {
-      item.querySelectorAll(".partner--region").forEach((regionElement) => {
-        regionElement.textContent
-          .trim()
-          .split(",")
-          .map((r) => r.trim())
-          .forEach((region) => regions.add(region));
+    try {
+      const response = await fetch(apiUrl);
+      const countries = await response.json();
+
+      // Assuming the API returns an array of countries with continent information
+      const continentCountryMap = countries.reduce((map, country) => {
+        const continent = country.region; // The API property that denotes the continent
+        const countryName = country.name.common; // The API property for the country's common name
+
+        if (continent) {
+          if (!map[continent]) {
+            map[continent] = [];
+          }
+          map[continent].push(countryName);
+        }
+        return map;
+      }, {});
+
+      // Now you have a map of continents to countries, you can create the optgroups and options as shown earlier
+      const continents = Object.keys(continentCountryMap);
+      continents.forEach((continent) => {
+        const group = document.createElement("optgroup");
+        group.label = continent;
+        regionFilter.appendChild(group);
+
+        continentCountryMap[continent].forEach((country) => {
+          const option = new Option(country, country);
+          group.appendChild(option);
+        });
       });
-
-      item.querySelectorAll(".partner--area").forEach((areaElement) => {
-        areaElement.textContent
-          .trim()
-          .split(",")
-          .map((a) => a.trim())
-          .forEach((area) => areas.add(area));
-      });
-
-      item.querySelectorAll(".partner--state").forEach((stateElement) => {
-        stateElement.textContent
-          .trim()
-          .split(",")
-          .map((s) => s.trim())
-          .forEach((state) => states.add(state));
-      });
-    });
-
-    regions.forEach((region) => regionFilter.add(new Option(region, region)));
-    areas.forEach((area) => areaFilter.add(new Option(area, area)));
-    states.forEach((state) => {
-      const radioHtml = `<label class="radio-btn"><input type="radio" name="state" value="${state}" class="radio-btn-label"> <span class="radio-check"></span> ${state}</label>`;
-      stateFilter.insertAdjacentHTML("beforeend", radioHtml);
-    });
+    } catch (error) {
+      console.error("There was an error fetching the country data:", error);
+    }
   }
 
   // Apply custom styles to the first visible partner item
