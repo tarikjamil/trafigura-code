@@ -95,10 +95,17 @@ $(".navbar--dropdown-trigger").on("click", function () {
 });
 
 $(".navlink.w--current").each(function () {
-  $(this)
+  let $dropdownTrigger = $(this)
     .closest(".navbar--dropdown")
-    .find(".navbar--dropdown-trigger")
-    .click();
+    .find(".navbar--dropdown-trigger");
+  let $siblingDropdownList = $dropdownTrigger.siblings(
+    ".navbar--dropdown-list"
+  );
+
+  // Instantly apply the necessary styles and classes
+  $siblingDropdownList.css("height", "auto");
+  $dropdownTrigger.addClass("open");
+  $dropdownTrigger.closest(".navbar--dropdown").addClass("is--active");
 });
 
 // ------------------ Swiper ------------------ //
