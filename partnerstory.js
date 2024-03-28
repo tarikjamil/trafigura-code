@@ -4,88 +4,91 @@ document.addEventListener("DOMContentLoaded", function () {
   const stateFilter = document.getElementById("stateFilter");
   const partnerItems = document.querySelectorAll(".partner--item");
 
-  // Functions
-  function applyCustomStyles() {
-    if (window.innerWidth >= 992) {
-      partnerItems.forEach((item) => {
-        item.classList.remove("custom-style");
-      });
-      const firstVisibleItem = Array.from(partnerItems).find(
-        (item) => getComputedStyle(item).display !== "none"
-      );
-      if (firstVisibleItem) {
-        firstVisibleItem.classList.add("custom-style");
+  // Populate filters with unique values from partner items
+  async function populateFilters() {
+    // Assume we have a function that fetches countries and their continents
+    const continentCountryMap = await fetchCountriesGroupedByContinents();
+
+    // Populate regionFilter
+    regionFilter.innerHTML = '<option value="">Region/Country</option>';
+    for (const continent of Object.keys(continentCountryMap).sort()) {
+      const continentOption = document.createElement("option");
+      continentOption.value = continent;
+      continentOption.textContent = continent;
+      continentOption.classList.add("continent-option");
+      regionFilter.appendChild(continentOption);
+
+      for (const country of continentCountryMap[continent].sort()) {
+        const countryOption = document.createElement("option");
+        countryOption.value = country;
+        countryOption.textContent = country;
+        countryOption.classList.add("country-option");
+        continentOption.appendChild(countryOption);
       }
     }
-  }
 
-  function filterItems(selectedRegion) {
-    partnerItems.forEach((item) => {
-      const regions = item.dataset.region.split(",").map((r) => r.trim());
-      item.style.display = regions.includes(selectedRegion) ? "" : "none";
+    // Populate areaFilter
+    const areas = Array.from(
+      new Set(
+        [...partnerItems].map((item) =>
+          item.querySelector(".partner--area").textContent.trim()
+        )
+      )
+    );
+    areaFilter.innerHTML = '<option value="">Area of work</option>';
+    areas.forEach((area) => {
+      const option = new Option(area, area);
+      areaFilter.add(option);
     });
-    applyCustomStyles();
-  }
 
-  function resetFilters() {
-    regionFilter.selectedIndex = 0;
-    partnerItems.forEach((item) => {
-      item.style.display = "";
+    // Populate stateFilter (assuming states are not too numerous for radio buttons)
+    const states = Array.from(
+      new Set(
+        [...partnerItems].map((item) =>
+          item.querySelector(".partner--state").textContent.trim()
+        )
+      )
+    );
+    stateFilter.innerHTML = "";
+    states.forEach((state) => {
+      const label = document.createElement("label");
+      label.className = "radio-btn";
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = "state";
+      radio.value = state;
+      label.appendChild(radio);
+      const span = document.createElement("span");
+      span.className = "radio-check";
+      label.appendChild(span);
+      label.appendChild(document.createTextNode(state));
+      stateFilter.appendChild(label);
     });
-    applyCustomStyles();
   }
 
-  document
-    .getElementById("resetFilters")
-    .addEventListener("click", resetFilters);
-
-  // Populate filter dropdowns with unique values from partner items
-  async function populateFilters() {
+  // Fetch countries grouped by their continents
+  async function fetchCountriesGroupedByContinents() {
     const apiUrl = "https://restcountries.com/v3.1/all";
     try {
       const response = await fetch(apiUrl);
       const countries = await response.json();
-      // Create a set of all unique country names available in .partner--region elements
-      const availableCountries = new Set();
-      partnerItems.forEach((item) => {
-        item.querySelectorAll(".partner--region").forEach((regionElement) => {
-          regionElement.textContent.split(",").forEach((country) => {
-            availableCountries.add(country.trim());
-          });
-        });
-      });
-
-      // Filter and sort the country data
-      const continentCountryMap = countries.reduce((map, country) => {
+      const continentCountryMap = {};
+      countries.forEach((country) => {
         const continent = country.region;
         const countryName = country.name.common;
-        if (availableCountries.has(countryName)) {
-          if (!map[continent]) {
-            map[continent] = [];
-          }
-          map[continent].push(countryName);
+        if (!continentCountryMap[continent]) {
+          continentCountryMap[continent] = [];
         }
-        return map;
-      }, {});
-
-      // Populate the region filter dropdown
-      regionFilter.innerHTML = '<option value="">Region/Country</option>';
-      Object.keys(continentCountryMap)
-        .sort()
-        .forEach((continent) => {
-          const continentOption = new Option(continent, continent);
-          continentOption.disabled = true;
-          regionFilter.appendChild(continentOption);
-          continentCountryMap[continent].sort().forEach((country) => {
-            regionFilter.appendChild(new Option(country, country));
-          });
-        });
+        continentCountryMap[continent].push(countryName);
+      });
+      return continentCountryMap;
     } catch (error) {
-      console.error("Error fetching the country data: ", error);
+      console.error("Error fetching countries: ", error);
+      return {};
     }
   }
 
-  // Function to filter partner items based on selected filter values
+  // Filter items based on selections
   function filterItems() {
     const selectedRegion = regionFilter.value;
     const selectedArea = areaFilter.value;
@@ -94,48 +97,36 @@ document.addEventListener("DOMContentLoaded", function () {
     )?.value;
 
     partnerItems.forEach((item) => {
-      // Ensure that dataset properties exist and are not undefined
-      const regions = item.dataset.region
-        ? item.dataset.region.split(",").map((r) => r.trim())
-        : [];
-      const areas = item.dataset.area
-        ? item.dataset.area.split(",").map((a) => a.trim())
-        : [];
-      const states = item.dataset.state
-        ? item.dataset.state.split(",").map((s) => s.trim())
-        : [];
+      const regions = item
+        .querySelector(".partner--region")
+        .textContent.split(",")
+        .map((r) => r.trim());
+      const area = item.querySelector(".partner--area").textContent.trim();
+      const state = item.querySelector(".partner--state").textContent.trim();
 
       const regionMatch = !selectedRegion || regions.includes(selectedRegion);
-      const areaMatch = !selectedArea || areas.includes(selectedArea);
-      const stateMatch = !selectedState || states.includes(selectedState);
+      const areaMatch = !selectedArea || area === selectedArea;
+      const stateMatch = !selectedState || state === selectedState;
 
       item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
     });
-
-    applyCustomStyles();
   }
 
-  // Event listeners for filter changes
+  // Set up filter change events
   regionFilter.addEventListener("change", filterItems);
   areaFilter.addEventListener("change", filterItems);
   stateFilter.addEventListener("change", filterItems);
 
-  // Event listener for the reset button
-  document.getElementById("resetFilters").addEventListener("click", () => {
-    regionFilter.selectedIndex = 0;
-    areaFilter.selectedIndex = 0;
-    stateFilter
-      .querySelectorAll('input[name="state"]')
-      .forEach((radio) => (radio.checked = false));
-    filterItems();
-  });
-  // Event listener for window resize
-  window.addEventListener("resize", applyCustomStyles);
-
-  // Add event listener for the reset button
   document
     .getElementById("resetFilters")
-    .addEventListener("click", resetFilters);
-  // Populate the filters on load
+    .addEventListener("click", function () {
+      regionFilter.selectedIndex = 0;
+      areaFilter.selectedIndex = 0;
+      stateFilter
+        .querySelectorAll('input[name="state"]')
+        .forEach((radio) => (radio.checked = false));
+      filterItems();
+    });
+
   populateFilters();
 });
