@@ -7,7 +7,65 @@ document.addEventListener("DOMContentLoaded", function () {
   // Get all partner items
   const partnerItems = document.querySelectorAll(".partner--item");
 
-  // Function to apply custom styles to the first visible partner item
+  // Populate filter dropdowns with unique values from partner items
+  async function populateFilters() {
+    // Call an API to get countries and their continents
+    const apiUrl = "https://restcountries.com/v3.1/all"; // Example API endpoint
+
+    // Create a set of all unique country names available in .partner--region elements
+    const availableCountries = new Set();
+    partnerItems.forEach((item) => {
+      item.querySelectorAll(".partner--region").forEach((regionElement) => {
+        regionElement.textContent
+          .trim()
+          .split(",")
+          .map((r) => r.trim())
+          .forEach((country) => availableCountries.add(country));
+      });
+    });
+
+    try {
+      const response = await fetch(apiUrl);
+      const countries = await response.json();
+
+      // Clear any existing options
+      regionFilter.innerHTML = '<option value="">Region/Country</option>';
+
+      // Filter the API results to only include countries that are present in the availableCountries set
+      const continentCountryMap = countries.reduce((map, country) => {
+        const continent = country.region;
+        const countryName = country.name.common;
+        // Only add the country if it is present in the availableCountries set
+        if (continent && availableCountries.has(countryName)) {
+          if (!map[continent]) {
+            map[continent] = [];
+          }
+          map[continent].push(countryName);
+        }
+        return map;
+      }, {});
+
+      // Now, create the optgroups and options with the filtered country list
+      const continents = Object.keys(continentCountryMap);
+      continents.forEach((continent) => {
+        // Add continent as a selectable option
+        const continentOption = new Option(continent, continent);
+        continentOption.disabled = true; // Disable it so it doesn't interfere with country selection
+        continentOption.classList.add("continent-option");
+        regionFilter.appendChild(continentOption);
+
+        // Add countries within this continent as options
+        continentCountryMap[continent].forEach((country) => {
+          const option = new Option(country, country);
+          regionFilter.appendChild(option);
+        });
+      });
+    } catch (error) {
+      console.error("There was an error fetching the country data:", error);
+    }
+  }
+
+  // Apply custom styles to the first visible partner item
   function applyCustomStyles() {
     if (window.innerWidth >= 992) {
       partnerItems.forEach((item) => {
@@ -24,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Function to filter partner items based on selected filter values
+  // Filter partner items based on selected filter values
   function filterItems() {
     const selectedRegion = regionFilter.value;
     const selectedArea = areaFilter.value;
@@ -33,27 +91,61 @@ document.addEventListener("DOMContentLoaded", function () {
     )?.value;
 
     partnerItems.forEach((item) => {
-      const regionMatch = !selectedRegion || item.dataset.region === selectedRegion;
-      const areaMatch = !selectedArea || item.dataset.area === selectedArea;
-      const stateMatch = !selectedState || item.dataset.state === selectedState;
-      
+      const regionMatch =
+        !selectedRegion ||
+        Array.from(item.querySelectorAll(".partner--region")).some(
+          (regionElement) =>
+            regionElement.textContent
+              .trim()
+              .split(",")
+              .map((r) => r.trim())
+              .includes(selectedRegion)
+        );
+
+      const areaMatch =
+        !selectedArea ||
+        Array.from(item.querySelectorAll(".partner--area")).some(
+          (areaElement) =>
+            areaElement.textContent
+              .trim()
+              .split(",")
+              .map((a) => a.trim())
+              .includes(selectedArea)
+        );
+
+      const stateMatch =
+        !selectedState ||
+        Array.from(item.querySelectorAll(".partner--state")).some(
+          (stateElement) =>
+            stateElement.textContent
+              .trim()
+              .split(",")
+              .map((s) => s.trim())
+              .includes(selectedState)
+        );
+
       item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
     });
 
     applyCustomStyles();
   }
 
-  // Function to filter partner items by continent
+  // Filter partner items by continent
   function filterItemsByContinent(continent) {
     partnerItems.forEach((item) => {
-      const isItemInContinent = item.dataset.region.includes(continent);
+      const isItemInContinent = Array.from(
+        item.querySelectorAll(".partner--region")
+      ).some((regionElement) =>
+        regionElement.textContent.trim().includes(continent)
+      );
+
       item.style.display = isItemInContinent ? "" : "none";
     });
 
     applyCustomStyles();
   }
 
-  // Function to reset filters
+  // Reset filters function
   function resetFilters() {
     regionFilter.selectedIndex = 0;
     areaFilter.selectedIndex = 0;
@@ -63,69 +155,30 @@ document.addEventListener("DOMContentLoaded", function () {
     filterItems();
   }
 
+  // Event listener for filter changes
+  regionFilter.addEventListener("change", (event) => {
+    const selectedOption = event.target.options[event.target.selectedIndex];
+
+    if (selectedOption.classList.contains("continent-option")) {
+      // Code to filter items by the selected continent
+      filterItemsByContinent(selectedOption.text);
+    } else {
+      // Otherwise, filter by country as before
+      filterItems();
+    }
+  });
+
   // Event listener for window resize
   window.addEventListener("resize", applyCustomStyles);
 
-  // Event listener for the reset button
-  document.getElementById("resetFilters").addEventListener("click", resetFilters);
+  // Add event listener for the reset button
+  document
+    .getElementById("resetFilters")
+    .addEventListener("click", resetFilters);
 
-  // Function to populate filter dropdowns with unique values from partner items
-  async function populateFilters() {
-    // Call an API to get countries and their continents
-    const apiUrl = "https://restcountries.com/v3.1/all"; // Example API endpoint
-    try {
-      const response = await fetch(apiUrl);
-      const countries = await response.json();
+  // Initial population of filter dropdowns
+  populateFilters();
 
-      // Create a set of all unique country names available in .partner--region elements
-      const availableCountries = new Set();
-      partnerItems.forEach((item) => {
-        const regions = item.dataset.region.split(",").map((r) => r.trim());
-        regions.forEach((region) => availableCountries.add(region));
-      });
-
-      // Filter the API results to only include countries that are present in the availableCountries set
-      const continentCountryMap = countries.reduce((map, country) => {
-        const continent = country.region;
-        const countryName = country.name.common;
-        if (continent && availableCountries.has(countryName)) {
-          if (!map[continent]) {
-            map[continent] = [];
-          }
-          map[continent].push(countryName);
-        }
-        return map;
-      }, {});
-
-      // Clear the dropdown
-      regionFilter.innerHTML = '';
-
-      // Add the 'Select Region/Country' default option
-      regionFilter.add(new Option('Region/Country', ''));
-
-      // Create the continent options and country options
-      Object.keys(continentCountryMap).forEach((continent) => {
-        // Add continent as a non-selectable option
-        const continentOption = new Option(continent, continent);
-        continentOption.disabled = true;
-        regionFilter.add(continentOption);
-
-        // Add countries within this continent as options
-        continentCountryMap[continent].forEach((country) => {
-          const countryOption = new Option(country, country);
-          countryOption.classList.add("country-option");
-          regionFilter.add(countryOption);
-        });
-      });
-    } catch (error) {
-      console.error("There was an error fetching the country data:", error);
-    }
-  }
-
-  // Event listener for dropdown changes
-  regionFilter.addEventListener("change", (event) => {
-    const selected = regionFilter.options[regionFilter.selectedIndex];
-    if (selected.classList.contains("country-option")) {
-      // Filter by the selected country
-      filterItems();
-   
+  // Initial application of custom styles
+  applyCustomStyles();
+});
