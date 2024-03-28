@@ -39,8 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("resetFilters")
     .addEventListener("click", resetFilters);
 
-  // Populate filters
-
   // Populate filter dropdowns with unique values from partner items
   async function populateFilters() {
     const apiUrl = "https://restcountries.com/v3.1/all";
@@ -96,15 +94,25 @@ document.addEventListener("DOMContentLoaded", function () {
     )?.value;
 
     partnerItems.forEach((item) => {
-      const regionMatch =
-        !selectedRegion || item.dataset.region.includes(selectedRegion);
-      const areaMatch =
-        !selectedArea || item.dataset.area.includes(selectedArea);
-      const stateMatch =
-        !selectedState || item.dataset.state.includes(selectedState);
+      // Ensure that dataset properties exist and are not undefined
+      const regions = item.dataset.region
+        ? item.dataset.region.split(",").map((r) => r.trim())
+        : [];
+      const areas = item.dataset.area
+        ? item.dataset.area.split(",").map((a) => a.trim())
+        : [];
+      const states = item.dataset.state
+        ? item.dataset.state.split(",").map((s) => s.trim())
+        : [];
+
+      const regionMatch = !selectedRegion || regions.includes(selectedRegion);
+      const areaMatch = !selectedArea || areas.includes(selectedArea);
+      const stateMatch = !selectedState || states.includes(selectedState);
 
       item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
     });
+
+    applyCustomStyles();
   }
 
   // Event listeners for filter changes
@@ -121,7 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .forEach((radio) => (radio.checked = false));
     filterItems();
   });
-
   // Event listener for window resize
   window.addEventListener("resize", applyCustomStyles);
 
@@ -129,10 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("resetFilters")
     .addEventListener("click", resetFilters);
-
-  // Initial population of filter dropdowns
+  // Populate the filters on load
   populateFilters();
-
-  // Initial application of custom styles
-  applyCustomStyles();
 });
