@@ -12,19 +12,20 @@ document.addEventListener("DOMContentLoaded", function () {
     // Populate regionFilter
     regionFilter.innerHTML = '<option value="">Region/Country</option>';
     for (const continent of Object.keys(continentCountryMap).sort()) {
-      const continentOption = document.createElement("option");
-      continentOption.value = continent;
-      continentOption.textContent = continent;
-      continentOption.classList.add("continent-option");
-      regionFilter.appendChild(continentOption);
+      // Create an optgroup element for each continent
+      const continentGroup = document.createElement("optgroup");
+      continentGroup.label = continent;
 
+      // Add countries as option elements to the optgroup
       for (const country of continentCountryMap[continent].sort()) {
         const countryOption = document.createElement("option");
         countryOption.value = country;
         countryOption.textContent = country;
-        countryOption.classList.add("country-option");
-        continentOption.appendChild(countryOption);
+        continentGroup.appendChild(countryOption);
       }
+
+      // Append the optgroup to the select element
+      regionFilter.appendChild(continentGroup);
     }
 
     // Populate areaFilter
