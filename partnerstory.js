@@ -14,66 +14,37 @@ document.addEventListener("DOMContentLoaded", function () {
     const states = new Set();
 
     partnerItems.forEach((item) => {
-      const regionText = item
-        .querySelector(".partner--region")
-        .textContent.trim();
-      const areaText = item.querySelector(".partner--area").textContent.trim();
-      const state = item.querySelector(".partner--state").textContent.trim();
-
-      const regionList = regionText.split(",").map((r) => r.trim());
-      const areaList = areaText.split(",").map((a) => a.trim());
-
-      regionList.forEach((region) => {
-        if (region) regions.add(region);
+      item.querySelectorAll(".partner--region").forEach((regionElement) => {
+        regionElement.textContent
+          .trim()
+          .split(",")
+          .map((r) => r.trim())
+          .forEach((region) => regions.add(region));
       });
 
-      areaList.forEach((area) => {
-        if (area) areas.add(area);
+      item.querySelectorAll(".partner--area").forEach((areaElement) => {
+        areaElement.textContent
+          .trim()
+          .split(",")
+          .map((a) => a.trim())
+          .forEach((area) => areas.add(area));
       });
 
-      if (state) states.add(state);
+      item.querySelectorAll(".partner--state").forEach((stateElement) => {
+        stateElement.textContent
+          .trim()
+          .split(",")
+          .map((s) => s.trim())
+          .forEach((state) => states.add(state));
+      });
     });
 
     regions.forEach((region) => regionFilter.add(new Option(region, region)));
     areas.forEach((area) => areaFilter.add(new Option(area, area)));
-
     states.forEach((state) => {
-      const radioHtml = `<label class="radio-btn"><input type="radio" name="state" value="${state}" class="radio-btn-lbel"> <span class="radio-check"></span> ${state}</label>`;
+      const radioHtml = `<label class="radio-btn"><input type="radio" name="state" value="${state}" class="radio-btn-label"> <span class="radio-check"></span> ${state}</label>`;
       stateFilter.insertAdjacentHTML("beforeend", radioHtml);
     });
-  }
-
-  // Filter partner items based on selected filter values
-  function filterItems() {
-    const selectedRegion = regionFilter.value;
-    const selectedArea = areaFilter.value;
-    const selectedState = document.querySelector(
-      'input[name="state"]:checked'
-    )?.value;
-
-    partnerItems.forEach((item) => {
-      const itemRegionText = item
-        .querySelector(".partner--region")
-        .textContent.trim();
-      const itemAreaText = item
-        .querySelector(".partner--area")
-        .textContent.trim();
-      const itemState = item
-        .querySelector(".partner--state")
-        .textContent.trim();
-
-      const itemRegions = itemRegionText.split(",").map((r) => r.trim());
-      const itemAreas = itemAreaText.split(",").map((a) => a.trim());
-
-      const regionMatch =
-        !selectedRegion || itemRegions.includes(selectedRegion);
-      const areaMatch = !selectedArea || itemAreas.includes(selectedArea);
-      const stateMatch = !selectedState || itemState === selectedState;
-
-      item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
-    });
-
-    applyCustomStyles();
   }
 
   // Apply custom styles to the first visible partner item
@@ -91,6 +62,54 @@ document.addEventListener("DOMContentLoaded", function () {
         firstVisibleItem.classList.add("custom-style");
       }
     }
+  }
+
+  // Filter partner items based on selected filter values
+  function filterItems() {
+    const selectedRegion = regionFilter.value;
+    const selectedArea = areaFilter.value;
+    const selectedState = document.querySelector(
+      'input[name="state"]:checked'
+    )?.value;
+
+    partnerItems.forEach((item) => {
+      const regionMatch =
+        !selectedRegion ||
+        Array.from(item.querySelectorAll(".partner--region")).some(
+          (regionElement) =>
+            regionElement.textContent
+              .trim()
+              .split(",")
+              .map((r) => r.trim())
+              .includes(selectedRegion)
+        );
+
+      const areaMatch =
+        !selectedArea ||
+        Array.from(item.querySelectorAll(".partner--area")).some(
+          (areaElement) =>
+            areaElement.textContent
+              .trim()
+              .split(",")
+              .map((a) => a.trim())
+              .includes(selectedArea)
+        );
+
+      const stateMatch =
+        !selectedState ||
+        Array.from(item.querySelectorAll(".partner--state")).some(
+          (stateElement) =>
+            stateElement.textContent
+              .trim()
+              .split(",")
+              .map((s) => s.trim())
+              .includes(selectedState)
+        );
+
+      item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
+    });
+
+    applyCustomStyles();
   }
 
   // Reset filters function
