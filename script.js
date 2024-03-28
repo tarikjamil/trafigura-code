@@ -94,18 +94,14 @@ $(".navbar--dropdown-trigger").on("click", function () {
   $(this).toggleClass("open");
 });
 
-$(".navlink.w--current").each(function () {
-  let $dropdownTrigger = $(this)
-    .closest(".navbar--dropdown")
-    .find(".navbar--dropdown-trigger");
-  let $siblingDropdownList = $dropdownTrigger.siblings(
-    ".navbar--dropdown-list"
-  );
-
-  // Instantly apply the necessary styles and classes
-  $siblingDropdownList.css("height", "auto");
-  $dropdownTrigger.addClass("open");
-  $dropdownTrigger.closest(".navbar--dropdown").addClass("is--active");
+$(window).on("load", function () {
+  // Check for any .navlink with the class .w--current and simulate a click on its .navbar--dropdown-trigger
+  $(".navlink.w--current").each(function () {
+    $(this)
+      .closest(".navbar--dropdown")
+      .find(".navbar--dropdown-trigger")
+      .click();
+  });
 });
 
 // ------------------ Swiper ------------------ //
