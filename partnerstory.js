@@ -14,12 +14,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const states = new Set();
 
     partnerItems.forEach((item) => {
-      const region = item.querySelector(".partner--region").textContent.trim();
-      const area = item.querySelector(".partner--area").textContent.trim();
+      const regionText = item
+        .querySelector(".partner--region")
+        .textContent.trim();
+      const areaText = item.querySelector(".partner--area").textContent.trim();
       const state = item.querySelector(".partner--state").textContent.trim();
 
-      if (region) regions.add(region);
-      if (area) areas.add(area);
+      const regionList = regionText.split(",").map((r) => r.trim());
+      const areaList = areaText.split(",").map((a) => a.trim());
+
+      regionList.forEach((region) => {
+        if (region) regions.add(region);
+      });
+
+      areaList.forEach((area) => {
+        if (area) areas.add(area);
+      });
+
       if (state) states.add(state);
     });
 
@@ -30,6 +41,39 @@ document.addEventListener("DOMContentLoaded", function () {
       const radioHtml = `<label class="radio-btn"><input type="radio" name="state" value="${state}" class="radio-btn-lbel"> <span class="radio-check"></span> ${state}</label>`;
       stateFilter.insertAdjacentHTML("beforeend", radioHtml);
     });
+  }
+
+  // Filter partner items based on selected filter values
+  function filterItems() {
+    const selectedRegion = regionFilter.value;
+    const selectedArea = areaFilter.value;
+    const selectedState = document.querySelector(
+      'input[name="state"]:checked'
+    )?.value;
+
+    partnerItems.forEach((item) => {
+      const itemRegionText = item
+        .querySelector(".partner--region")
+        .textContent.trim();
+      const itemAreaText = item
+        .querySelector(".partner--area")
+        .textContent.trim();
+      const itemState = item
+        .querySelector(".partner--state")
+        .textContent.trim();
+
+      const itemRegions = itemRegionText.split(",").map((r) => r.trim());
+      const itemAreas = itemAreaText.split(",").map((a) => a.trim());
+
+      const regionMatch =
+        !selectedRegion || itemRegions.includes(selectedRegion);
+      const areaMatch = !selectedArea || itemAreas.includes(selectedArea);
+      const stateMatch = !selectedState || itemState === selectedState;
+
+      item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
+    });
+
+    applyCustomStyles();
   }
 
   // Apply custom styles to the first visible partner item
@@ -47,33 +91,6 @@ document.addEventListener("DOMContentLoaded", function () {
         firstVisibleItem.classList.add("custom-style");
       }
     }
-  }
-
-  // Filter partner items based on selected filter values
-  function filterItems() {
-    const selectedRegion = regionFilter.value;
-    const selectedArea = areaFilter.value;
-    const selectedState = document.querySelector(
-      'input[name="state"]:checked'
-    )?.value;
-
-    partnerItems.forEach((item) => {
-      const itemRegion = item
-        .querySelector(".partner--region")
-        .textContent.trim();
-      const itemArea = item.querySelector(".partner--area").textContent.trim();
-      const itemState = item
-        .querySelector(".partner--state")
-        .textContent.trim();
-
-      const regionMatch = !selectedRegion || itemRegion === selectedRegion;
-      const areaMatch = !selectedArea || itemArea === selectedArea;
-      const stateMatch = !selectedState || itemState === selectedState;
-
-      item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
-    });
-
-    applyCustomStyles();
   }
 
   // Reset filters function
