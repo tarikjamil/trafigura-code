@@ -12,16 +12,28 @@ document.addEventListener("DOMContentLoaded", function () {
     // Call an API to get countries and their continents
     const apiUrl = "https://restcountries.com/v3.1/all"; // Example API endpoint
 
+    // Create a set of all unique country names available in .partner--region elements
+    const availableCountries = new Set();
+    partnerItems.forEach((item) => {
+      item.querySelectorAll(".partner--region").forEach((regionElement) => {
+        regionElement.textContent
+          .trim()
+          .split(",")
+          .map((r) => r.trim())
+          .forEach((country) => availableCountries.add(country));
+      });
+    });
+
     try {
       const response = await fetch(apiUrl);
       const countries = await response.json();
 
-      // Assuming the API returns an array of countries with continent information
+      // Filter the API results to only include countries that are present in the availableCountries set
       const continentCountryMap = countries.reduce((map, country) => {
-        const continent = country.region; // The API property that denotes the continent
-        const countryName = country.name.common; // The API property for the country's common name
-
-        if (continent) {
+        const continent = country.region;
+        const countryName = country.name.common;
+        // Only add the country if it is present in the availableCountries set
+        if (continent && availableCountries.has(countryName)) {
           if (!map[continent]) {
             map[continent] = [];
           }
@@ -30,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return map;
       }, {});
 
-      // Now you have a map of continents to countries, you can create the optgroups and options as shown earlier
+      // Now, create the optgroups and options with the filtered country list
       const continents = Object.keys(continentCountryMap);
       continents.forEach((continent) => {
         const group = document.createElement("optgroup");
