@@ -242,25 +242,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const populateRegionFilter = () => {
     const regionSelect = document.getElementById("regionFilter");
-    const organizedData = organizeAndSortOptions(countryToContinent);
+    const items = document.querySelectorAll(".partner--item");
+    const uniqueRegions = new Set();
+    const uniqueContinents = new Set();
 
-    // First add continents as options
-    Object.keys(organizedData)
-      .sort()
-      .forEach((continent) => {
-        const continentOption = document.createElement("option");
-        continentOption.value = continent;
-        continentOption.textContent = continent;
-        regionSelect.appendChild(continentOption);
-
-        // Then add countries within this continent, sorted alphabetically
-        organizedData[continent].forEach((country) => {
-          const countryOption = document.createElement("option");
-          countryOption.value = country;
-          countryOption.textContent = `${country} (${continent})`;
-          regionSelect.appendChild(countryOption);
-        });
+    items.forEach((item) => {
+      const regions = item
+        .querySelector(".partner--region")
+        .textContent.split(", ");
+      regions.forEach((region) => {
+        uniqueRegions.add(region);
+        uniqueContinents.add(countryToContinent[region]);
       });
+    });
+
+    // Convert Sets to Arrays for sorting
+    const sortedRegions = [...uniqueRegions].sort();
+    const sortedContinents = [...uniqueContinents].sort();
+
+    // Populate continents first
+    sortedContinents.forEach((continent) => {
+      if (continent) {
+        const option = document.createElement("option");
+        option.value = continent;
+        option.textContent = continent;
+        regionSelect.appendChild(option);
+      }
+    });
+
+    // Then populate countries
+    sortedRegions.forEach((region) => {
+      const option = document.createElement("option");
+      option.value = region;
+      option.textContent = region;
+      regionSelect.appendChild(option);
+    });
   };
 
   // Function to map countries to continents
@@ -295,4 +311,29 @@ document.addEventListener("DOMContentLoaded", function () {
   setPartnerContinents();
   populateRegionFilter();
   populateOtherFilters();
+
+  // Filter functionality based on selection
+  document
+    .getElementById("regionFilter")
+    .addEventListener("change", function () {
+      const selectedValue = this.value;
+      document.querySelectorAll(".partner--item").forEach((item) => {
+        const regions = item
+          .querySelector(".partner--region")
+          .textContent.split(", ");
+        const itemContinents = regions.map(
+          (region) => countryToContinent[region.trim()]
+        );
+
+        // Determine if item should be visible
+        const isRegionMatch = regions.some(
+          (region) => region.trim() === selectedValue
+        );
+        const isContinentMatch = itemContinents.includes(selectedValue);
+        item.style.display =
+          selectedValue === "" || isRegionMatch || isContinentMatch
+            ? ""
+            : "none";
+      });
+    });
 });
