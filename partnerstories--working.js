@@ -241,54 +241,44 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   function populateRegionFilter() {
-    const regionDropdown = document.getElementById("regionFilter");
-    // Initialize the dropdown with options
-    const continentCountries = organizeAndSortOptions(countryToContinent);
+    const regionSelect = document.getElementById("regionFilter");
 
-    Object.entries(continentCountries).forEach(([continent, countries]) => {
-      // Add continent as a header (non-selectable)
-      addDropdownOption(regionDropdown, continent, continent, true);
-      // Add countries under this continent
-      countries.forEach((country) => {
-        addDropdownOption(regionDropdown, `--- ${country}`, country);
+    // Step 1: Organize countries by continent
+    const continentCountries = {};
+    document.querySelectorAll(".partner--item").forEach((item) => {
+      const regions = item
+        .querySelector(".partner--region")
+        .textContent.split(", ")
+        .map((r) => r.trim());
+      regions.forEach((region) => {
+        const continent = countryToContinent[region];
+        if (continent) {
+          if (!continentCountries[continent]) {
+            continentCountries[continent] = new Set();
+          }
+          continentCountries[continent].add(region);
+        }
       });
     });
-  }
 
-  // Helper function to add options
-  function addDropdownOption(dropdown, text, value, isContinent = false) {
-    const option = document.createElement("div");
-    option.className = `dropdown-option${
-      isContinent ? " continent-option" : ""
-    }`;
-    option.textContent = text;
-    option.setAttribute("data-value", value);
-    if (!isContinent) {
-      option.addEventListener("click", function () {
-        // This is where you'll handle option selection
-        const selectedValue = this.getAttribute("data-value");
-        document.getElementById("dropdownTitle").textContent =
-          this.textContent.trim();
-        filterItems(selectedValue);
-      });
-    }
-    dropdown.appendChild(option);
-  }
+    // Step 2: Sort continents and countries
+    const sortedContinents = Object.keys(continentCountries).sort();
+    sortedContinents.forEach((continent) => {
+      // Add continent option
+      const continentOption = document.createElement("option");
+      continentOption.value = continent;
+      continentOption.textContent = continent;
+      regionSelect.appendChild(continentOption);
 
-  function filterItems(selectedValue) {
-    // Implement your filtering logic here based on the selected value
-    console.log("Filtering items for:", selectedValue);
-    // Example: Hide all items that do not match the selected region/continent
-    document.querySelectorAll(".partner--item").forEach((item) => {
-      const itemRegion = item
-        .querySelector(".partner--region")
-        .textContent.trim();
-      const itemContinent = countryToContinent[itemRegion] || "";
-      if (selectedValue === itemRegion || selectedValue === itemContinent) {
-        item.style.display = "";
-      } else {
-        item.style.display = "none";
-      }
+      // Sort and add countries for this continent
+      Array.from(continentCountries[continent])
+        .sort()
+        .forEach((country) => {
+          const countryOption = document.createElement("option");
+          countryOption.value = country;
+          countryOption.textContent = `--- ${country}`;
+          regionSelect.appendChild(countryOption);
+        });
     });
   }
 
