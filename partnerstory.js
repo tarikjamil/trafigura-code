@@ -298,15 +298,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const uniqueValues = new Set();
 
     items.forEach((item) => {
-      const value = item.querySelector(attribute).textContent;
-      if (value) uniqueValues.add(value);
+      const values =
+        item.querySelector(attribute)?.textContent.split(",") || [];
+      values.forEach((value) => {
+        if (value.trim()) uniqueValues.add(value.trim());
+      });
     });
 
     [...uniqueValues].sort().forEach((value) => {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = value;
-      filterSelect.appendChild(option);
+      if (selector === "stateFilter" && attribute === ".partner--state") {
+        // For stateFilter, create radio buttons instead of dropdown options
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.id = value;
+        input.name = "state";
+        input.value = value;
+
+        const label = document.createElement("label");
+        label.htmlFor = value;
+        label.textContent = value;
+
+        filterSelect.appendChild(input);
+        filterSelect.appendChild(label);
+      } else {
+        // For other filters, use dropdown options
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        filterSelect.appendChild(option);
+      }
     });
   };
 
@@ -318,11 +338,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const resetFilters = () => {
     document.getElementById("regionFilter").selectedIndex = 0;
     document.getElementById("areaFilter").selectedIndex = 0;
-    document.getElementById("stateFilter").selectedIndex = 0;
-    // Make sure to re-display all items if they were hidden
-    document.querySelectorAll(".partner--item").forEach((item) => {
-      item.style.display = "";
-    });
+    document
+      .querySelectorAll('input[name="state"]')
+      .forEach((rb) => (rb.checked = false));
+    filterItems(); // Call filterItems to reset the filtering
   };
 
   document
@@ -335,27 +354,36 @@ document.addEventListener("DOMContentLoaded", function () {
   populateOtherFilters();
 
   // Filter functionality based on selection
+  // Example for regionFilter, adapt for areaFilter and add event listeners for stateFilter radio buttons
   document
     .getElementById("regionFilter")
     .addEventListener("change", function () {
       const selectedValue = this.value;
-      document.querySelectorAll(".partner--item").forEach((item) => {
-        const regions = item
-          .querySelector(".partner--region")
-          .textContent.split(", ");
-        const itemContinents = regions.map(
-          (region) => countryToContinent[region.trim()]
-        );
-
-        // Determine if item should be visible
-        const isRegionMatch = regions.some(
-          (region) => region.trim() === selectedValue
-        );
-        const isContinentMatch = itemContinents.includes(selectedValue);
-        item.style.display =
-          selectedValue === "" || isRegionMatch || isContinentMatch
-            ? ""
-            : "none";
-      });
+      filterItems();
     });
+
+  function filterItems() {
+    const selectedRegion = document.getElementById("regionFilter").value;
+    const selectedArea = document.getElementById("areaFilter").value;
+    // Assuming you have a way to get the selected state value, maybe through document.querySelector('input[name="state"]:checked')?.value
+
+    document.querySelectorAll(".partner--item").forEach((item) => {
+      const regions = item
+        .querySelector(".partner--region")
+        .textContent.split(", ")
+        .map((r) => r.trim());
+      const areas = item
+        .querySelector(".partner--area")
+        .textContent.split(", ")
+        .map((a) => a.trim());
+      // Add logic for states similar to regions and areas
+
+      const regionMatch = !selectedRegion || regions.includes(selectedRegion);
+      const areaMatch = !selectedArea || areas.includes(selectedArea);
+      // Add match checking for states
+
+      item.style.display =
+        regionMatch && areaMatch /* && stateMatch */ ? "" : "none";
+    });
+  }
 });
