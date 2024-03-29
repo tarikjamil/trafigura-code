@@ -292,10 +292,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   };
 
-  // Function to populate area and state filters (simplified example)
-  const populateOtherFilters = () => {
-    // Implement similar logic for areaFilter and stateFilter based on your specific requirements
+  const populateFilter = (selector, attribute) => {
+    const filterSelect = document.getElementById(selector);
+    const items = document.querySelectorAll(".partner--item");
+    const uniqueValues = new Set();
+
+    items.forEach((item) => {
+      const value = item.querySelector(attribute).textContent;
+      if (value) uniqueValues.add(value);
+    });
+
+    [...uniqueValues].sort().forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      filterSelect.appendChild(option);
+    });
   };
+
+  // You'll call these functions after defining them within the DOMContentLoaded listener
+  populateFilter("areaFilter", ".partner--area");
+  populateFilter("stateFilter", ".partner--state");
 
   // Reset filters function
   const resetFilters = () => {
@@ -336,4 +353,14 @@ document.addEventListener("DOMContentLoaded", function () {
             : "none";
       });
     });
+
+  const resetFilters = () => {
+    document.getElementById("regionFilter").selectedIndex = 0;
+    document.getElementById("areaFilter").selectedIndex = 0;
+    document.getElementById("stateFilter").selectedIndex = 0;
+    // Make sure to re-display all items if they were hidden
+    document.querySelectorAll(".partner--item").forEach((item) => {
+      item.style.display = "";
+    });
+  };
 });
