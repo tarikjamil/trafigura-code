@@ -223,6 +223,46 @@ document.addEventListener("DOMContentLoaded", function () {
     "Wallis and Futuna": "Oceania",
   };
 
+  // Enhancements for sorting and organizing filter options
+  const organizeAndSortOptions = (countryToContinentMap) => {
+    const continentCountriesMap = {};
+    // Organize countries by continent
+    for (const [country, continent] of Object.entries(countryToContinentMap)) {
+      if (!continentCountriesMap[continent]) {
+        continentCountriesMap[continent] = [];
+      }
+      continentCountriesMap[continent].push(country);
+    }
+    // Sort countries within each continent
+    for (const continent of Object.keys(continentCountriesMap)) {
+      continentCountriesMap[continent].sort();
+    }
+    return continentCountriesMap;
+  };
+
+  const populateRegionFilter = () => {
+    const regionSelect = document.getElementById("regionFilter");
+    const organizedData = organizeAndSortOptions(countryToContinent);
+
+    // First add continents as options
+    Object.keys(organizedData)
+      .sort()
+      .forEach((continent) => {
+        const continentOption = document.createElement("option");
+        continentOption.value = continent;
+        continentOption.textContent = continent;
+        regionSelect.appendChild(continentOption);
+
+        // Then add countries within this continent, sorted alphabetically
+        organizedData[continent].forEach((country) => {
+          const countryOption = document.createElement("option");
+          countryOption.value = country;
+          countryOption.textContent = `${country} (${continent})`;
+          regionSelect.appendChild(countryOption);
+        });
+      });
+  };
+
   // Function to map countries to continents
   const setPartnerContinents = () => {
     document.querySelectorAll(".partner--item").forEach((item) => {
