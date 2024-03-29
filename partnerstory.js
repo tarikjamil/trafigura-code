@@ -364,40 +364,35 @@ document.addEventListener("DOMContentLoaded", function () {
   function filterItems() {
     const selectedRegion = document.getElementById("regionFilter").value;
     const selectedArea = document.getElementById("areaFilter").value;
-    // Get the value of the selected state radio button
     const selectedState = document.querySelector(
       'input[name="state"]:checked'
     )?.value;
 
     document.querySelectorAll(".partner--item").forEach((item) => {
-      // Checks for region
       const regions = item
         .querySelector(".partner--region")
         .textContent.split(", ")
         .map((r) => r.trim());
-      const regionMatch = !selectedRegion || regions.includes(selectedRegion);
-
-      // Checks for area
       const areas = item
         .querySelector(".partner--area")
         .textContent.split(", ")
         .map((a) => a.trim());
-      const areaMatch = !selectedArea || areas.includes(selectedArea);
-
-      // Check for state
       const state = item.querySelector(".partner--state")?.textContent.trim();
+
+      const regionMatch = !selectedRegion || regions.includes(selectedRegion);
+      const areaMatch = !selectedArea || areas.includes(selectedArea);
       const stateMatch = !selectedState || state === selectedState;
 
       item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
     });
   }
-});
 
-document.getElementById("areaFilter").addEventListener("change", filterItems);
+  document.getElementById("areaFilter").addEventListener("change", filterItems);
 
-// Since state radio buttons are dynamically added, use event delegation on their parent container
-document.getElementById("stateFilter").addEventListener("change", (event) => {
-  if (event.target.name === "state") {
-    filterItems();
-  }
+  // Since state radio buttons are dynamically added, use event delegation on their parent container
+  document.getElementById("stateFilter").addEventListener("change", (event) => {
+    if (event.target.name === "state") {
+      filterItems();
+    }
+  });
 });
