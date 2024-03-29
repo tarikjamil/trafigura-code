@@ -364,25 +364,40 @@ document.addEventListener("DOMContentLoaded", function () {
   function filterItems() {
     const selectedRegion = document.getElementById("regionFilter").value;
     const selectedArea = document.getElementById("areaFilter").value;
-    // Assuming you have a way to get the selected state value, maybe through document.querySelector('input[name="state"]:checked')?.value
+    // Get the value of the selected state radio button
+    const selectedState = document.querySelector(
+      'input[name="state"]:checked'
+    )?.value;
 
     document.querySelectorAll(".partner--item").forEach((item) => {
+      // Checks for region
       const regions = item
         .querySelector(".partner--region")
         .textContent.split(", ")
         .map((r) => r.trim());
+      const regionMatch = !selectedRegion || regions.includes(selectedRegion);
+
+      // Checks for area
       const areas = item
         .querySelector(".partner--area")
         .textContent.split(", ")
         .map((a) => a.trim());
-      // Add logic for states similar to regions and areas
-
-      const regionMatch = !selectedRegion || regions.includes(selectedRegion);
       const areaMatch = !selectedArea || areas.includes(selectedArea);
-      // Add match checking for states
 
-      item.style.display =
-        regionMatch && areaMatch /* && stateMatch */ ? "" : "none";
+      // Check for state
+      const state = item.querySelector(".partner--state")?.textContent.trim();
+      const stateMatch = !selectedState || state === selectedState;
+
+      item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
     });
+  }
+});
+
+document.getElementById("areaFilter").addEventListener("change", filterItems);
+
+// Since state radio buttons are dynamically added, use event delegation on their parent container
+document.getElementById("stateFilter").addEventListener("change", (event) => {
+  if (event.target.name === "state") {
+    filterItems();
   }
 });
