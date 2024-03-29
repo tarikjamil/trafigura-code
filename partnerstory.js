@@ -362,7 +362,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   function filterItems() {
-    const selectedRegion = document.getElementById("regionFilter").value;
+    const selectedRegionOrContinent =
+      document.getElementById("regionFilter").value;
     const selectedArea = document.getElementById("areaFilter").value;
     const selectedState = document.querySelector(
       'input[name="state"]:checked'
@@ -373,17 +374,25 @@ document.addEventListener("DOMContentLoaded", function () {
         .querySelector(".partner--region")
         .textContent.split(", ")
         .map((r) => r.trim());
+      const continents = item
+        .querySelector(".partner--continent")
+        .textContent.split(", ")
+        .map((c) => c.trim());
       const areas = item
         .querySelector(".partner--area")
         .textContent.split(", ")
         .map((a) => a.trim());
       const state = item.querySelector(".partner--state")?.textContent.trim();
 
-      const regionMatch = !selectedRegion || regions.includes(selectedRegion);
+      const regionOrContinentMatch =
+        !selectedRegionOrContinent ||
+        regions.includes(selectedRegionOrContinent) ||
+        continents.includes(selectedRegionOrContinent);
       const areaMatch = !selectedArea || areas.includes(selectedArea);
       const stateMatch = !selectedState || state === selectedState;
 
-      item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
+      item.style.display =
+        regionOrContinentMatch && areaMatch && stateMatch ? "" : "none";
     });
   }
 
