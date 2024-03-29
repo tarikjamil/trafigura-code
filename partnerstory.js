@@ -242,11 +242,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function populateRegionFilter() {
     const regionSelect = document.getElementById("regionFilter");
-    const items = document.querySelectorAll(".partner--item");
+    // Clear existing options except the first one
+    while (regionSelect.options.length > 1) {
+      regionSelect.remove(1);
+    }
+
     let continents = new Set();
     let countries = [];
 
-    items.forEach((item) => {
+    document.querySelectorAll(".partner--item").forEach((item) => {
       const regions = item
         .querySelector(".partner--region")
         .textContent.split(", ")
@@ -258,24 +262,22 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    // Sort continents
     continents = Array.from(continents).sort();
 
-    // Sort countries within each continent
-    countries = countries.sort((a, b) => {
-      if (a.continent === b.continent) {
-        return a.country.localeCompare(b.country);
-      }
-      return continents.indexOf(a.continent) - continents.indexOf(b.continent);
-    });
+    countries = countries
+      .filter(
+        (value, index, self) =>
+          index === self.findIndex((t) => t.country === value.country)
+      )
+      .sort((a, b) => {
+        if (a.continent === b.continent) {
+          return a.country.localeCompare(b.country);
+        }
+        return (
+          continents.indexOf(a.continent) - continents.indexOf(b.continent)
+        );
+      });
 
-    // Remove duplicates from countries
-    countries = countries.filter(
-      (value, index, self) =>
-        index === self.findIndex((t) => t.country === value.country)
-    );
-
-    // Append continents first
     continents.forEach((continent) => {
       const option = document.createElement("option");
       option.value = continent;
@@ -283,7 +285,6 @@ document.addEventListener("DOMContentLoaded", function () {
       regionSelect.appendChild(option);
     });
 
-    // Then append countries
     countries.forEach(({ country }) => {
       const option = document.createElement("option");
       option.value = country;
