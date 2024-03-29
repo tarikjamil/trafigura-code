@@ -242,14 +242,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function populateRegionFilter() {
     const regionSelect = document.getElementById("regionFilter");
-    // Clear existing options except the first one
-    while (regionSelect.options.length > 1) {
-      regionSelect.remove(1);
-    }
 
-    let continents = new Set();
-    let countries = [];
-
+    // Step 1: Organize countries by continent
+    const continentCountries = {};
     document.querySelectorAll(".partner--item").forEach((item) => {
       const regions = item
         .querySelector(".partner--region")
@@ -257,39 +252,33 @@ document.addEventListener("DOMContentLoaded", function () {
         .map((r) => r.trim());
       regions.forEach((region) => {
         const continent = countryToContinent[region];
-        continents.add(continent);
-        countries.push({ country: region, continent: continent });
-      });
-    });
-
-    continents = Array.from(continents).sort();
-
-    countries = countries
-      .filter(
-        (value, index, self) =>
-          index === self.findIndex((t) => t.country === value.country)
-      )
-      .sort((a, b) => {
-        if (a.continent === b.continent) {
-          return a.country.localeCompare(b.country);
+        if (continent) {
+          if (!continentCountries[continent]) {
+            continentCountries[continent] = new Set();
+          }
+          continentCountries[continent].add(region);
         }
-        return (
-          continents.indexOf(a.continent) - continents.indexOf(b.continent)
-        );
       });
-
-    continents.forEach((continent) => {
-      const option = document.createElement("option");
-      option.value = continent;
-      option.textContent = continent;
-      regionSelect.appendChild(option);
     });
 
-    countries.forEach(({ country }) => {
-      const option = document.createElement("option");
-      option.value = country;
-      option.textContent = country;
-      regionSelect.appendChild(option);
+    // Step 2: Sort continents and countries
+    const sortedContinents = Object.keys(continentCountries).sort();
+    sortedContinents.forEach((continent) => {
+      // Add continent option
+      const continentOption = document.createElement("option");
+      continentOption.value = continent;
+      continentOption.textContent = continent;
+      regionSelect.appendChild(continentOption);
+
+      // Sort and add countries for this continent
+      Array.from(continentCountries[continent])
+        .sort()
+        .forEach((country) => {
+          const countryOption = document.createElement("option");
+          countryOption.value = country;
+          countryOption.textContent = `--- ${country}`;
+          regionSelect.appendChild(countryOption);
+        });
     });
   }
 
