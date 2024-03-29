@@ -317,7 +317,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Reset filters function
   const resetFilters = () => {
     document.getElementById("regionFilter").selectedIndex = 0;
-    // Reset other filters similarly
+    document.getElementById("areaFilter").selectedIndex = 0;
+    document.getElementById("stateFilter").selectedIndex = 0;
+    // Make sure to re-display all items if they were hidden
+    document.querySelectorAll(".partner--item").forEach((item) => {
+      item.style.display = "";
+    });
   };
 
   document
@@ -353,14 +358,4 @@ document.addEventListener("DOMContentLoaded", function () {
             : "none";
       });
     });
-
-  const resetFilters = () => {
-    document.getElementById("regionFilter").selectedIndex = 0;
-    document.getElementById("areaFilter").selectedIndex = 0;
-    document.getElementById("stateFilter").selectedIndex = 0;
-    // Make sure to re-display all items if they were hidden
-    document.querySelectorAll(".partner--item").forEach((item) => {
-      item.style.display = "";
-    });
-  };
 });
