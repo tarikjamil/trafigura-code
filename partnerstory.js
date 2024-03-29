@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-;const countryToContinent = {
+const countryToContinent = {
   // North America
   Canada: 'North America',
   United States: 'North America',
