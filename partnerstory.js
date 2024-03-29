@@ -351,7 +351,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initial population of continents and filters
   setPartnerContinents();
   populateRegionFilter();
-  populateOtherFilters();
 
   // Filter functionality based on selection
   // Example for regionFilter, adapt for areaFilter and add event listeners for stateFilter radio buttons
