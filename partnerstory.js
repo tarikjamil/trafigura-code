@@ -276,39 +276,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   };
 
-  // Populate regionFilter
-  const populateRegionFilter = () => {
-    const regionSelect = document.getElementById("regionFilter");
-    const regions = new Set();
-    const continents = new Set();
-
-    document.querySelectorAll(".partner--item").forEach((item) => {
-      const regionDiv = item
-        .querySelector(".partner--region")
-        .textContent.split(", ");
-      regionDiv.forEach((region) => {
-        regions.add(region);
-        continents.add(countryToContinent[region]);
-      });
-    });
-
-    continents.forEach((continent) => {
-      if (continent) {
-        const option = document.createElement("option");
-        option.value = continent;
-        option.textContent = continent;
-        regionSelect.appendChild(option);
-      }
-    });
-
-    regions.forEach((region) => {
-      const option = document.createElement("option");
-      option.value = region;
-      option.textContent = region;
-      regionSelect.appendChild(option);
-    });
-  };
-
   // Function to populate area and state filters (simplified example)
   const populateOtherFilters = () => {
     // Implement similar logic for areaFilter and stateFilter based on your specific requirements
