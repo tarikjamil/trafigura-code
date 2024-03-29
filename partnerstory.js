@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return continentCountriesMap;
   };
 
-  const populateRegionFilter = () => {
+  function populateRegionFilter() {
     const regionSelect = document.getElementById("regionFilter");
     const items = document.querySelectorAll(".partner--item");
     const uniqueRegions = new Set();
@@ -249,35 +249,51 @@ document.addEventListener("DOMContentLoaded", function () {
     items.forEach((item) => {
       const regions = item
         .querySelector(".partner--region")
-        .textContent.split(", ");
+        .textContent.split(", ")
+        .map((r) => r.trim());
       regions.forEach((region) => {
         uniqueRegions.add(region);
         uniqueContinents.add(countryToContinent[region]);
       });
     });
 
-    // Convert Sets to Arrays for sorting
-    const sortedRegions = [...uniqueRegions].sort();
-    const sortedContinents = [...uniqueContinents].sort();
+    // Separate continents and countries
+    const continentsOptions = Array.from(uniqueContinents)
+      .sort()
+      .map((continent) => {
+        return { value: continent, text: continent };
+      });
 
-    // Populate continents first
-    sortedContinents.forEach((continent) => {
-      if (continent) {
-        const option = document.createElement("option");
-        option.value = continent;
-        option.textContent = continent;
-        regionSelect.appendChild(option);
+    const countriesOptions = Array.from(uniqueRegions)
+      .sort()
+      .map((country) => {
+        return {
+          value: country,
+          text: country,
+          continent: countryToContinent[country],
+        };
+      });
+
+    // Combine and sort by continent, then by name
+    const combinedOptions = [...continentsOptions, ...countriesOptions];
+    combinedOptions.sort((a, b) => {
+      if (a.continent === b.continent) {
+        return a.text.localeCompare(b.text);
       }
+      return (
+        continentsOptions.findIndex((o) => o.value === a.continent) -
+        continentsOptions.findIndex((o) => o.value === b.continent)
+      );
     });
 
-    // Then populate countries
-    sortedRegions.forEach((region) => {
-      const option = document.createElement("option");
-      option.value = region;
-      option.textContent = region;
-      regionSelect.appendChild(option);
+    // Append options to select
+    combinedOptions.forEach((option) => {
+      const opt = document.createElement("option");
+      opt.value = option.value;
+      opt.textContent = option.text;
+      regionSelect.appendChild(opt);
     });
-  };
+  }
 
   // Function to map countries to continents
   const setPartnerContinents = () => {
