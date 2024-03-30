@@ -223,74 +223,83 @@ document.addEventListener("DOMContentLoaded", function () {
     "Wallis and Futuna": "Oceania",
   };
 
-  const continentCountries = organizeAndSortOptions(countryToContinent);
-
-  populateFilterWithRadioButtons(
-    "regionFilter",
-    Object.keys(continentCountries),
-    true
-  );
-  Object.keys(continentCountries).forEach((continent) => {
-    populateFilterWithRadioButtons(
-      "regionFilter",
-      continentCountries[continent],
-      false
-    );
-  });
-  populateFilterWithRadioButtons(
-    "areaFilter",
-    ["Technology", "Healthcare", "Education"],
-    true
-  );
-  populateFilterWithRadioButtons(
-    "stateFilter",
-    ["Active", "Inactive", "Pending"],
-    true
-  );
-
-  function organizeAndSortOptions(map) {
-    const organized = {};
-    for (const [country, continent] of Object.entries(map)) {
-      if (!organized[continent]) organized[continent] = [];
-      organized[continent].push(country);
+  function organizeAndSortOptions(countryToContinentMap) {
+    const continentCountriesMap = {};
+    for (const [country, continent] of Object.entries(countryToContinentMap)) {
+      if (!continentCountriesMap[continent]) {
+        continentCountriesMap[continent] = [];
+      }
+      continentCountriesMap[continent].push(country);
     }
-    for (const continent of Object.keys(organized)) {
-      organized[continent].sort();
+    for (const continent of Object.keys(continentCountriesMap)) {
+      continentCountriesMap[continent].sort();
     }
-    return organized;
+    return continentCountriesMap;
   }
 
-  function populateFilterWithRadioButtons(filterId, items, prependAll) {
-    const container = document.getElementById(filterId);
-    if (prependAll) {
-      container.appendChild(
-        createRadioButton(`${filterId}-all`, filterId, "All", "All")
-      );
-    }
-    items.forEach((item) => {
-      container.appendChild(
-        createRadioButton(`${filterId}-${item}`, filterId, item, item)
-      );
+  const continentCountries = organizeAndSortOptions(countryToContinent);
+  setPartnerContinents();
+  populateRegionFilter();
+  populateFilter("areaFilter", ".partner--area");
+  populateFilter("stateFilter", ".partner--state");
+
+  function setPartnerContinents() {
+    document.querySelectorAll(".partner--item").forEach((item) => {
+      const regions = item
+        .querySelector(".partner--region")
+        .textContent.split(", ")
+        .map((r) => r.trim());
+      const continents = regions
+        .map((region) => countryToContinent[region])
+        .filter(Boolean);
+      item.querySelector(".partner--continent").textContent = [
+        ...new Set(continents),
+      ].join(", ");
     });
   }
 
-  function createRadioButton(id, name, value, labelText) {
-    const wrapper = document.createElement("div");
-    wrapper.className = "radio-option";
+  function populateRegionFilter() {
+    const filterContainer = document.getElementById("regionFilter");
+    Object.keys(continentCountries)
+      .sort()
+      .forEach((continent) => {
+        filterContainer.appendChild(
+          createRadioButton("regionFilter", continent, continent)
+        );
+        continentCountries[continent].forEach((country) => {
+          filterContainer.appendChild(
+            createRadioButton("regionFilter", country, `--- ${country}`)
+          );
+        });
+      });
+  }
 
+  function populateFilter(selector, attribute) {
+    const filterContainer = document.getElementById(selector);
+    const items = document.querySelectorAll(".partner--item");
+    const uniqueValues = new Set();
+    items.forEach((item) => {
+      const values =
+        item.querySelector(attribute)?.textContent.split(",") || [];
+      values.forEach((value) => uniqueValues.add(value.trim()));
+    });
+    [...uniqueValues].sort().forEach((value) => {
+      filterContainer.appendChild(createRadioButton(selector, value, value));
+    });
+  }
+
+  function createRadioButton(name, value, labelText) {
+    const wrapper = document.createElement("div");
     const input = document.createElement("input");
     input.type = "radio";
-    input.id = id;
+    input.id = `${name}-${value}`;
     input.name = name;
     input.value = value;
-
     const label = document.createElement("label");
-    label.htmlFor = id;
+    label.htmlFor = `${name}-${value}`;
     label.textContent = labelText;
-
     wrapper.appendChild(input);
     wrapper.appendChild(label);
-
     return wrapper;
   }
 
@@ -312,26 +321,34 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("change", filterItems);
 
   function filterItems() {
-    const region = document.querySelector(
+    const selectedRegion = document.querySelector(
       'input[name="regionFilter"]:checked'
     )?.value;
-    const area = document.querySelector(
+    const selectedArea = document.querySelector(
       'input[name="areaFilter"]:checked'
     )?.value;
-    const state = document.querySelector(
+    const selectedState = document.querySelector(
       'input[name="stateFilter"]:checked'
     )?.value;
-
     document.querySelectorAll(".partner--item").forEach((item) => {
-      const itemRegion = item.dataset.region; // Assuming data attributes for region, area, and state
-      const itemArea = item.dataset.area;
-      const itemState = item.dataset.state;
-
-      const regionMatch = !region || region === "All" || itemRegion === region;
-      const areaMatch = !area || area === "All" || itemArea === area;
-      const stateMatch = !state || state === "All" || itemState === state;
-
-      item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
+      const regionOrContinentMatch =
+        !selectedRegion ||
+        item
+          .querySelector(".partner--region")
+          .textContent.includes(selectedRegion) ||
+        item
+          .querySelector(".partner--continent")
+          .textContent.includes(selectedRegion);
+      const areaMatch =
+        !selectedArea ||
+        item.querySelector(".partner--area").textContent.includes(selectedArea);
+      const stateMatch =
+        !selectedState ||
+        item
+          .querySelector(".partner--state")
+          .textContent.includes(selectedState);
+      item.style.display =
+        regionOrContinentMatch && areaMatch && stateMatch ? "" : "none";
     });
   }
 });
