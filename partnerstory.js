@@ -368,3 +368,50 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+// ------------------- select animation ------------------- //
+document.addEventListener("DOMContentLoaded", function () {
+  const selectWrappers = document.querySelectorAll(".filter--select-wrapper");
+
+  selectWrappers.forEach((wrapper) => {
+    const select = wrapper.querySelector(".filter-select");
+    const options = wrapper.querySelector(".filter--options");
+    const selectText = wrapper.querySelector(".filter--select-text");
+    const radios = options.querySelectorAll('input[type="radio"]');
+
+    // Toggle dropdown
+    select.addEventListener("click", function () {
+      options.style.display =
+        options.style.display === "block" ? "none" : "block";
+    });
+
+    // Change text and hide dropdown on radio select
+    radios.forEach((radio) => {
+      radio.addEventListener("change", function () {
+        selectText.textContent = this.nextElementSibling.textContent;
+        options.style.display = "none";
+      });
+    });
+
+    // Reset functionality
+    const resetButton = document.getElementById("resetFilters");
+    resetButton.addEventListener("click", function () {
+      selectText.textContent = "Region/Country";
+      // Optionally, uncheck all radios within this wrapper
+      radios.forEach((radio) => {
+        radio.checked = false;
+      });
+    });
+  });
+
+  // Clicking outside to close the dropdown
+  document.addEventListener("click", function (e) {
+    selectWrappers.forEach((wrapper) => {
+      const isClickInside = wrapper.contains(e.target);
+      if (!isClickInside) {
+        const options = wrapper.querySelector(".filter--options");
+        options.style.display = "none";
+      }
+    });
+  });
+});
