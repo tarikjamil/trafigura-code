@@ -266,7 +266,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .sort()
       .forEach((continent) => {
         filterContainer.appendChild(
-          createRadioButton("regionFilter", continent, continent)
+          createRadioButton("regionFilter", continent, continent, true)
         );
         [...continentCountries[continent]].sort().forEach((country) => {
           filterContainer.appendChild(
@@ -290,13 +290,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function createRadioButton(name, value, labelText) {
+  function createRadioButton(name, value, labelText, isContinent = false) {
     const wrapper = document.createElement("div");
     const input = document.createElement("input");
     input.type = "radio";
     input.id = `${name}-${value}`;
     input.name = name;
     input.value = value;
+    if (isContinent) {
+      input.setAttribute("data-is-continent", "true");
+    }
     const label = document.createElement("label");
     label.htmlFor = `${name}-${value}`;
     label.textContent = labelText;
@@ -309,7 +312,14 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("resetFilters")
     .addEventListener("click", function () {
       document
-        .querySelectorAll('input[type="radio"][value="All"]')
+        .querySelectorAll(
+          '#regionFilter input[type="radio"][data-is-continent="true"]'
+        )
+        .forEach((radio) => (radio.checked = false));
+      document
+        .querySelectorAll(
+          '#areaFilter input[type="radio"]:first-child, #stateFilter input[type="radio"]:first-child'
+        )
         .forEach((radio) => (radio.checked = true));
       filterItems();
     });
