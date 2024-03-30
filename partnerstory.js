@@ -378,7 +378,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const options = wrapper.querySelector(".filter--options");
     const selectText = wrapper.querySelector(".filter--select-text");
     const radios = options.querySelectorAll('input[type="radio"]');
-    const resetButton = wrapper.querySelector(".btn--reset"); // Move reset button selector inside the loop
+    const resetButton = wrapper.querySelector(".btn--reset"); // Ensure the reset button is scoped to the wrapper.
+    const initialSelectText = selectText.textContent; // Store the initial text
 
     // Toggle dropdown
     select.addEventListener("click", function () {
@@ -398,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (resetButton) {
       // Check if resetButton exists
       resetButton.addEventListener("click", function () {
-        selectText.textContent = "Region/Country";
+        selectText.textContent = initialSelectText; // Revert to the stored initial text
         // Optionally, uncheck all radios within this wrapper
         radios.forEach((radio) => {
           radio.checked = false;
