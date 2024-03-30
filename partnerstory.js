@@ -372,50 +372,53 @@ document.addEventListener("DOMContentLoaded", function () {
 // ------------------- select animation ------------------- //
 document.addEventListener("DOMContentLoaded", function () {
   const selectWrappers = document.querySelectorAll(".filter--select-wrapper");
+  const resetButton = document.querySelector(".btn--reset"); // Assuming one reset button for all
 
   selectWrappers.forEach((wrapper) => {
     const select = wrapper.querySelector(".filter-select");
     const options = wrapper.querySelector(".filter--options");
     const selectText = wrapper.querySelector(".filter--select-text");
-    const radios = options.querySelectorAll('input[type="radio"]');
-    const resetButton = wrapper.querySelector(".btn--reset"); // Ensure the reset button is scoped to the wrapper.
     const initialSelectText = selectText.textContent; // Store the initial text
 
-    // Toggle dropdown
+    // Toggle dropdown visibility
     select.addEventListener("click", function () {
+      // Toggle visibility of options
       options.style.display =
         options.style.display === "block" ? "none" : "block";
     });
 
-    // Change text and hide dropdown on radio select
-    radios.forEach((radio) => {
-      radio.addEventListener("change", function () {
-        selectText.textContent = this.nextElementSibling.textContent;
+    // Set text to selected option and hide options
+    options.addEventListener("change", function (e) {
+      if (e.target && e.target.matches('input[type="radio"]')) {
+        selectText.textContent = e.target.nextElementSibling.textContent;
         options.style.display = "none";
-      });
+      }
     });
+  });
 
-    // Reset functionality scoped to each wrapper
-    if (resetButton) {
-      // Check if resetButton exists
-      resetButton.addEventListener("click", function () {
-        selectText.textContent = initialSelectText; // Revert to the stored initial text
-        // Optionally, uncheck all radios within this wrapper
+  // Reset functionality for all dropdowns
+  if (resetButton) {
+    resetButton.addEventListener("click", function () {
+      selectWrappers.forEach((wrapper) => {
+        const selectText = wrapper.querySelector(".filter--select-text");
+        const radios = wrapper.querySelectorAll('input[type="radio"]');
+        // Reset text to initial value stored at DOMContentLoaded
+        selectText.textContent = wrapper.dataset.initialSelectText;
+        // Uncheck all radio buttons within this wrapper
         radios.forEach((radio) => {
           radio.checked = false;
         });
       });
-    }
-  });
+    });
+  }
 
-  // Clicking outside to close the dropdown
+  // Hide dropdown when clicking outside
   document.addEventListener("click", function (e) {
-    selectWrappers.forEach((wrapper) => {
-      const isClickInside = wrapper.contains(e.target);
-      if (!isClickInside) {
+    if (!e.target.closest(".filter--select-wrapper")) {
+      selectWrappers.forEach((wrapper) => {
         const options = wrapper.querySelector(".filter--options");
         options.style.display = "none";
-      }
-    });
+      });
+    }
   });
 });
