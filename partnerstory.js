@@ -223,21 +223,6 @@ document.addEventListener("DOMContentLoaded", function () {
     "Wallis and Futuna": "Oceania",
   };
 
-  function organizeAndSortOptions(countryToContinentMap) {
-    const continentCountriesMap = {};
-    for (const [country, continent] of Object.entries(countryToContinentMap)) {
-      if (!continentCountriesMap[continent]) {
-        continentCountriesMap[continent] = [];
-      }
-      continentCountriesMap[continent].push(country);
-    }
-    for (const continent of Object.keys(continentCountriesMap)) {
-      continentCountriesMap[continent].sort();
-    }
-    return continentCountriesMap;
-  }
-
-  const continentCountries = organizeAndSortOptions(countryToContinent);
   setPartnerContinents();
   populateRegionFilter();
   populateFilter("areaFilter", ".partner--area");
@@ -259,6 +244,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function populateRegionFilter() {
+    const continentCountries = {};
+    document.querySelectorAll(".partner--item").forEach((item) => {
+      const regions = item
+        .querySelector(".partner--region")
+        .textContent.split(", ")
+        .map((r) => r.trim());
+      regions.forEach((region) => {
+        const continent = countryToContinent[region];
+        if (continent) {
+          if (!continentCountries[continent]) {
+            continentCountries[continent] = new Set();
+          }
+          continentCountries[continent].add(region);
+        }
+      });
+    });
+
     const filterContainer = document.getElementById("regionFilter");
     Object.keys(continentCountries)
       .sort()
@@ -266,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
         filterContainer.appendChild(
           createRadioButton("regionFilter", continent, continent)
         );
-        continentCountries[continent].forEach((country) => {
+        [...continentCountries[continent]].sort().forEach((country) => {
           filterContainer.appendChild(
             createRadioButton("regionFilter", country, `--- ${country}`)
           );
