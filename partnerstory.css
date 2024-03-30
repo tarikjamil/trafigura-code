@@ -40,6 +40,10 @@
   display: none;
 }
 
+.tag-category-1 {
+  z-index: 1;
+}
+
 .filter-radio_wrapper input[type="radio"] + label {
   height: 28rem;
   padding-left: 48rem;
