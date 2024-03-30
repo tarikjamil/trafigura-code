@@ -40,7 +40,8 @@
   display: none;
 }
 
-.tag-category-1 {
+.tag-category-1,
+.ongoing {
   z-index: 1 !important;
 }
 
