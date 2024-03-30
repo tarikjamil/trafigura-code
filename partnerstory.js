@@ -270,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
         [...continentCountries[continent]].sort().forEach((country) => {
           filterContainer.appendChild(
-            createRadioButton("regionFilter", country, `--- ${country}`)
+            createRadioButton("regionFilter", country, country)
           );
         });
       });
@@ -308,9 +308,9 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("resetFilters")
     .addEventListener("click", function () {
-      document.querySelectorAll('input[type="radio"]').forEach((radio) => {
-        if (radio.value === "All") radio.checked = true;
-      });
+      document
+        .querySelectorAll('input[type="radio"][value="All"]')
+        .forEach((radio) => (radio.checked = true));
       filterItems();
     });
 
