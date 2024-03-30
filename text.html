@@ -98,14 +98,32 @@
     class="filter--dropdown w-dropdown-list w--open"
     aria-labelledby="w-dropdown-toggle-0"
   >
-    <option value="value" class="filter-continent">value</option>
-    <option value="value" class="filter-country">value</option>
-    <option value="Africa">Africa</option>
-    <option value="Ethiopia">--- Ethiopia</option>
-    <option value="Mali">--- Mali</option>
-    <option value="Morocco">--- Morocco</option>
-    <option value="Togo">--- Togo</option>
-    <option value="South America">South America</option>
-    <option value="Peru">--- Peru</option>
+    <!-- Options will be added dynamically -->
   </nav>
 </div>
+
+<select id="regionFilter" class="filter-select">
+  <option value="">Region/Country</option>
+  <!-- Options will be added dynamically -->
+</select>
+<select id="areaFilter" class="filter-select">
+  <option value="">Area of work</option>
+  <!-- Options will be added dynamically -->
+</select>
+<div id="stateFilter" class="filter-radio_wrapper">
+  <!-- Radio buttons will be added dynamically -->
+</div>
+<button id="resetFilters" class="btn--reset">Reset Filters</button>
+
+<select id="regionFilter" class="filter-select">
+  <option value="">Region/Country</option>
+  <!-- Options will be added dynamically -->
+</select>
+<select id="areaFilter" class="filter-select">
+  <option value="">Area of work</option>
+  <!-- Options will be added dynamically -->
+</select>
+<div id="stateFilter" class="filter-radio_wrapper">
+  <!-- Radio buttons will be added dynamically -->
+</div>
+<button id="resetFilters" class="btn--reset">Reset Filters</button>

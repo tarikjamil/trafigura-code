@@ -223,202 +223,115 @@ document.addEventListener("DOMContentLoaded", function () {
     "Wallis and Futuna": "Oceania",
   };
 
-  // Enhancements for sorting and organizing filter options
-  const organizeAndSortOptions = (countryToContinentMap) => {
-    const continentCountriesMap = {};
-    // Organize countries by continent
-    for (const [country, continent] of Object.entries(countryToContinentMap)) {
-      if (!continentCountriesMap[continent]) {
-        continentCountriesMap[continent] = [];
-      }
-      continentCountriesMap[continent].push(country);
-    }
-    // Sort countries within each continent
-    for (const continent of Object.keys(continentCountriesMap)) {
-      continentCountriesMap[continent].sort();
-    }
-    return continentCountriesMap;
-  };
+  const continentCountries = organizeAndSortOptions(countryToContinent);
 
-  function populateRegionFilter() {
-    const regionDropdown = document.getElementById("regionFilter");
-    // Initialize the dropdown with options
-    const continentCountries = organizeAndSortOptions(countryToContinent);
+  populateFilterWithRadioButtons(
+    "regionFilter",
+    Object.keys(continentCountries),
+    true
+  );
+  Object.keys(continentCountries).forEach((continent) => {
+    populateFilterWithRadioButtons(
+      "regionFilter",
+      continentCountries[continent],
+      false
+    );
+  });
+  populateFilterWithRadioButtons(
+    "areaFilter",
+    ["Technology", "Healthcare", "Education"],
+    true
+  );
+  populateFilterWithRadioButtons(
+    "stateFilter",
+    ["Active", "Inactive", "Pending"],
+    true
+  );
 
-    Object.entries(continentCountries).forEach(([continent, countries]) => {
-      // Add continent as a header (non-selectable)
-      addDropdownOption(regionDropdown, continent, continent, true);
-      // Add countries under this continent
-      countries.forEach((country) => {
-        addDropdownOption(regionDropdown, `--- ${country}`, country);
-      });
-    });
+  function organizeAndSortOptions(map) {
+    const organized = {};
+    for (const [country, continent] of Object.entries(map)) {
+      if (!organized[continent]) organized[continent] = [];
+      organized[continent].push(country);
+    }
+    for (const continent of Object.keys(organized)) {
+      organized[continent].sort();
+    }
+    return organized;
   }
 
-  // Helper function to add options
-  function addDropdownOption(dropdown, text, value, isContinent = false) {
-    const option = document.createElement("div");
-    option.className = `dropdown-option${
-      isContinent ? " continent-option" : ""
-    }`;
-    option.textContent = text;
-    option.setAttribute("data-value", value);
-    if (!isContinent) {
-      option.addEventListener("click", function () {
-        // This is where you'll handle option selection
-        const selectedValue = this.getAttribute("data-value");
-        document.getElementById("dropdownTitle").textContent =
-          this.textContent.trim();
-        filterItems(selectedValue);
-      });
+  function populateFilterWithRadioButtons(filterId, items, prependAll) {
+    const container = document.getElementById(filterId);
+    if (prependAll) {
+      container.appendChild(
+        createRadioButton(`${filterId}-all`, filterId, "All", "All")
+      );
     }
-    dropdown.appendChild(option);
-  }
-
-  function filterItems(selectedValue) {
-    // Implement your filtering logic here based on the selected value
-    console.log("Filtering items for:", selectedValue);
-    // Example: Hide all items that do not match the selected region/continent
-    document.querySelectorAll(".partner--item").forEach((item) => {
-      const itemRegion = item
-        .querySelector(".partner--region")
-        .textContent.trim();
-      const itemContinent = countryToContinent[itemRegion] || "";
-      if (selectedValue === itemRegion || selectedValue === itemContinent) {
-        item.style.display = "";
-      } else {
-        item.style.display = "none";
-      }
-    });
-  }
-
-  // Function to map countries to continents
-  const setPartnerContinents = () => {
-    document.querySelectorAll(".partner--item").forEach((item) => {
-      const regionDiv = item.querySelector(".partner--region");
-      const continentDiv = item.querySelector(".partner--continent");
-      const regions = regionDiv.textContent.split(", ");
-      const continents = regions
-        .map((region) => countryToContinent[region])
-        .filter(Boolean);
-      continentDiv.textContent = [...new Set(continents)].join(", ");
-    });
-  };
-
-  const populateFilter = (selector, attribute) => {
-    const filterSelect = document.getElementById(selector);
-    const items = document.querySelectorAll(".partner--item");
-    const uniqueValues = new Set();
-
     items.forEach((item) => {
-      const values =
-        item.querySelector(attribute)?.textContent.split(",") || [];
-      values.forEach((value) => {
-        if (value.trim()) uniqueValues.add(value.trim());
-      });
+      container.appendChild(
+        createRadioButton(`${filterId}-${item}`, filterId, item, item)
+      );
     });
+  }
 
-    [...uniqueValues].sort().forEach((value) => {
-      if (selector === "stateFilter" && attribute === ".partner--state") {
-        // For stateFilter, create radio buttons instead of dropdown options
-        const input = document.createElement("input");
-        input.type = "radio";
-        input.id = value;
-        input.name = "state";
-        input.value = value;
+  function createRadioButton(id, name, value, labelText) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "radio-option";
 
-        const label = document.createElement("label");
-        label.htmlFor = value;
-        label.textContent = value;
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.id = id;
+    input.name = name;
+    input.value = value;
 
-        filterSelect.appendChild(input);
-        filterSelect.appendChild(label);
-      } else {
-        // For other filters, use dropdown options
-        const option = document.createElement("option");
-        option.value = value;
-        option.textContent = value;
-        filterSelect.appendChild(option);
-      }
-    });
-  };
+    const label = document.createElement("label");
+    label.htmlFor = id;
+    label.textContent = labelText;
 
-  // You'll call these functions after defining them within the DOMContentLoaded listener
-  populateFilter("areaFilter", ".partner--area");
-  populateFilter("stateFilter", ".partner--state");
+    wrapper.appendChild(input);
+    wrapper.appendChild(label);
 
-  // Reset filters function
-  const resetFilters = () => {
-    document.getElementById("regionFilter").selectedIndex = 0;
-    document.getElementById("areaFilter").selectedIndex = 0;
-    document
-      .querySelectorAll('input[name="state"]')
-      .forEach((rb) => (rb.checked = false));
-    filterItems(); // Call filterItems to reset the filtering
-  };
+    return wrapper;
+  }
 
   document
     .getElementById("resetFilters")
-    .addEventListener("click", resetFilters);
-
-  // Initial population of continents and filters
-  setPartnerContinents();
-  populateRegionFilter();
-
-  // Filter functionality based on selection
-  // Example for regionFilter, adapt for areaFilter and add event listeners for stateFilter radio buttons
-  document
-    .getElementById("regionFilter")
-    .addEventListener("change", function () {
-      const selectedValue = this.value;
+    .addEventListener("click", function () {
+      document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+        if (radio.value === "All") radio.checked = true;
+      });
       filterItems();
     });
 
+  document
+    .getElementById("regionFilter")
+    .addEventListener("change", filterItems);
+  document.getElementById("areaFilter").addEventListener("change", filterItems);
+  document
+    .getElementById("stateFilter")
+    .addEventListener("change", filterItems);
+
   function filterItems() {
-    const selectedRegionOrContinent =
-      document.getElementById("regionFilter").value;
-    const selectedArea = document.getElementById("areaFilter").value;
-    const selectedState = document.querySelector(
-      'input[name="state"]:checked'
+    const region = document.querySelector(
+      'input[name="regionFilter"]:checked'
+    )?.value;
+    const area = document.querySelector(
+      'input[name="areaFilter"]:checked'
+    )?.value;
+    const state = document.querySelector(
+      'input[name="stateFilter"]:checked'
     )?.value;
 
     document.querySelectorAll(".partner--item").forEach((item) => {
-      const regions = item
-        .querySelector(".partner--region")
-        .textContent.split(", ")
-        .map((r) => r.trim());
-      const continents = item
-        .querySelector(".partner--continent")
-        .textContent.split(", ")
-        .map((c) => c.trim());
-      const areas = item
-        .querySelector(".partner--area")
-        .textContent.split(", ")
-        .map((a) => a.trim());
-      const state = item.querySelector(".partner--state")?.textContent.trim();
+      const itemRegion = item.dataset.region; // Assuming data attributes for region, area, and state
+      const itemArea = item.dataset.area;
+      const itemState = item.dataset.state;
 
-      const regionOrContinentMatch =
-        !selectedRegionOrContinent ||
-        regions.includes(selectedRegionOrContinent) ||
-        continents.includes(selectedRegionOrContinent);
-      const areaMatch = !selectedArea || areas.includes(selectedArea);
-      const stateMatch = !selectedState || state === selectedState;
+      const regionMatch = !region || region === "All" || itemRegion === region;
+      const areaMatch = !area || area === "All" || itemArea === area;
+      const stateMatch = !state || state === "All" || itemState === state;
 
-      item.style.display =
-        regionOrContinentMatch && areaMatch && stateMatch ? "" : "none";
+      item.style.display = regionMatch && areaMatch && stateMatch ? "" : "none";
     });
-  }
-
-  document.getElementById("areaFilter").addEventListener("change", filterItems);
-
-  // Since state radio buttons are dynamically added, use event delegation on their parent container
-  document.getElementById("stateFilter").addEventListener("change", (event) => {
-    if (event.target.name === "state") {
-      filterItems();
-    }
-  });
-
-  function toggleCustomSelect() {
-    document.querySelector(".custom-options").classList.toggle("open");
   }
 });
