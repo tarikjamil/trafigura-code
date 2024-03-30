@@ -371,31 +371,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ------------------- select animation ------------------- //
 document.addEventListener("DOMContentLoaded", function () {
-  // Initialize dropdown functionality for each select wrapper
   const selectWrappers = document.querySelectorAll(".filter--select-wrapper");
-  selectWrappers.forEach((wrapper) => {
+  // Store initial texts in an array
+  const initialTexts = Array.from(selectWrappers).map(
+    (wrapper) => wrapper.querySelector(".filter--select-text").textContent
+  );
+
+  selectWrappers.forEach((wrapper, index) => {
     const select = wrapper.querySelector(".filter-select");
     const options = wrapper.querySelector(".filter--options");
     const selectText = wrapper.querySelector(".filter--select-text");
 
-    // Store the initial text to revert back to on reset
-    const initialSelectText = selectText.textContent;
-
     select.addEventListener("click", function () {
-      // Toggle display of options on select click
       options.style.display =
         options.style.display === "block" ? "none" : "block";
     });
 
     options.addEventListener("change", function (e) {
-      // Update select text and hide options when a radio is selected
       if (e.target && e.target.matches('input[type="radio"]')) {
         selectText.textContent = e.target.nextElementSibling.textContent;
         options.style.display = "none";
       }
     });
 
-    // Clicking outside the dropdown closes the options
+    // Close dropdown when clicking outside
     document.addEventListener(
       "click",
       function (event) {
@@ -404,29 +403,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       },
       true
-    ); // Use capture phase to ensure this runs before the select click event
+    ); // Using capture phase
   });
 
-  // Reset button functionality
+  // Reset functionality
   const resetButton = document.querySelector(".btn--reset");
   if (resetButton) {
     resetButton.addEventListener("click", function () {
-      selectWrappers.forEach((wrapper) => {
+      selectWrappers.forEach((wrapper, index) => {
         const selectText = wrapper.querySelector(".filter--select-text");
         const radios = wrapper.querySelectorAll('input[type="radio"]');
 
-        // Reset text to initial specific values per wrapper
-        if (
-          selectText.textContent.includes("Region") ||
-          selectText.textContent.includes("Africa")
-        ) {
-          selectText.textContent = "Region/Country";
-        } else if (
-          selectText.textContent.includes("Area") ||
-          selectText.textContent.includes("Sustainable")
-        ) {
-          selectText.textContent = "Area of work";
-        }
+        // Reset text to its initial value
+        selectText.textContent = initialTexts[index];
 
         // Uncheck all radios
         radios.forEach((radio) => (radio.checked = false));
