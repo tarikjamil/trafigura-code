@@ -371,54 +371,66 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ------------------- select animation ------------------- //
 document.addEventListener("DOMContentLoaded", function () {
+  // Initialize dropdown functionality for each select wrapper
   const selectWrappers = document.querySelectorAll(".filter--select-wrapper");
-  const resetButton = document.querySelector(".btn--reset"); // Assuming one reset button for all
-
   selectWrappers.forEach((wrapper) => {
     const select = wrapper.querySelector(".filter-select");
     const options = wrapper.querySelector(".filter--options");
     const selectText = wrapper.querySelector(".filter--select-text");
-    const initialSelectText = selectText.textContent; // Store the initial text
 
-    // Toggle dropdown visibility
+    // Store the initial text to revert back to on reset
+    const initialSelectText = selectText.textContent;
+
     select.addEventListener("click", function () {
-      // Toggle visibility of options
+      // Toggle display of options on select click
       options.style.display =
         options.style.display === "block" ? "none" : "block";
     });
 
-    // Set text to selected option and hide options
     options.addEventListener("change", function (e) {
+      // Update select text and hide options when a radio is selected
       if (e.target && e.target.matches('input[type="radio"]')) {
         selectText.textContent = e.target.nextElementSibling.textContent;
         options.style.display = "none";
       }
     });
+
+    // Clicking outside the dropdown closes the options
+    document.addEventListener(
+      "click",
+      function (event) {
+        if (!select.contains(event.target)) {
+          options.style.display = "none";
+        }
+      },
+      true
+    ); // Use capture phase to ensure this runs before the select click event
   });
 
-  // Reset functionality for all dropdowns
+  // Reset button functionality
+  const resetButton = document.querySelector(".btn--reset");
   if (resetButton) {
     resetButton.addEventListener("click", function () {
       selectWrappers.forEach((wrapper) => {
         const selectText = wrapper.querySelector(".filter--select-text");
         const radios = wrapper.querySelectorAll('input[type="radio"]');
-        // Reset text to initial value stored at DOMContentLoaded
-        selectText.textContent = wrapper.dataset.initialSelectText;
-        // Uncheck all radio buttons within this wrapper
-        radios.forEach((radio) => {
-          radio.checked = false;
-        });
+
+        // Reset text to initial specific values per wrapper
+        if (
+          selectText.textContent.includes("Region") ||
+          selectText.textContent.includes("Africa")
+        ) {
+          selectText.textContent = "Region/Country";
+        } else if (
+          selectText.textContent.includes("Area") ||
+          selectText.textContent.includes("Sustainable")
+        ) {
+          selectText.textContent = "Area of work";
+        }
+
+        // Uncheck all radios
+        radios.forEach((radio) => (radio.checked = false));
       });
     });
   }
-
-  // Hide dropdown when clicking outside
-  document.addEventListener("click", function (e) {
-    if (!e.target.closest(".filter--select-wrapper")) {
-      selectWrappers.forEach((wrapper) => {
-        const options = wrapper.querySelector(".filter--options");
-        options.style.display = "none";
-      });
-    }
-  });
 });
