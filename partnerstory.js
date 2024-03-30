@@ -425,7 +425,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 $(document).ready(function () {
-  $(".filter-select").each(function () {
-    $(this).click();
+  $(".filter-select").each(function (index) {
+    setTimeout(() => {
+      $(this).click();
+    }, 100 * index); // 100ms delay for each item
   });
 });
