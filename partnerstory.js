@@ -372,6 +372,12 @@ document.addEventListener("DOMContentLoaded", function () {
 // ------------------- select animation ------------------- //
 document.addEventListener("DOMContentLoaded", function () {
   const selectWrappers = document.querySelectorAll(".filter--select-wrapper");
+
+  // Initially hide all .filter--options elements
+  document.querySelectorAll(".filter--options").forEach((options) => {
+    options.style.display = "none";
+  });
+
   // Store initial texts in an array
   const initialTexts = Array.from(selectWrappers).map(
     (wrapper) => wrapper.querySelector(".filter--select-text").textContent
@@ -422,8 +428,4 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   }
-});
-
-$(document).ready(function () {
-  $(".filter-select:first").dblclick(); // Triggering dblclick event directly
 });
