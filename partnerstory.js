@@ -424,6 +424,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelector(".filter-select").click();
+$(document).ready(function () {
+  $(".filter-select:first").dblclick(); // Triggering dblclick event directly
 });
