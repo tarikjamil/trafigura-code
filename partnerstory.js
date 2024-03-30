@@ -308,21 +308,25 @@ document.addEventListener("DOMContentLoaded", function () {
     return wrapper;
   }
 
+  // Reset filters function
+  const resetFilters = () => {
+    document
+      .querySelectorAll('input[name="regionFilter"]')
+      .forEach((rb) => (rb.checked = false));
+    filterItems(); // Call filterItems to reset the filtering
+    document
+      .querySelectorAll('input[name="areaFilter"]')
+      .forEach((rb) => (rb.checked = false));
+    filterItems(); // Call filterItems to reset the filtering
+    document
+      .querySelectorAll('input[name="stateFilter"]')
+      .forEach((rb) => (rb.checked = false));
+    filterItems(); // Call filterItems to reset the filtering
+  };
+
   document
     .getElementById("resetFilters")
-    .addEventListener("click", function () {
-      document
-        .querySelectorAll(
-          '#regionFilter input[type="radio"][data-is-continent="true"]'
-        )
-        .forEach((radio) => (radio.checked = false));
-      document
-        .querySelectorAll(
-          '#areaFilter input[type="radio"]:first-child, #stateFilter input[type="radio"]:first-child'
-        )
-        .forEach((radio) => (radio.checked = true));
-      filterItems();
-    });
+    .addEventListener("click", resetFilters);
 
   document
     .getElementById("regionFilter")
