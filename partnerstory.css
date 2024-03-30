@@ -35,3 +35,7 @@
   width: 28rem;
   height: 28rem;
 }
+
+.filter-radio_wrapper div {
+  display: flex;
+}
