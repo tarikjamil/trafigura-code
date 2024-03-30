@@ -16,6 +16,10 @@
   overflow: hidden !important;
 }
 
+.filter--options {
+  display: none;
+}
+
 @media screen and (min-width: 1752px) {
   .navbar--menu {
     display: flex !important;
