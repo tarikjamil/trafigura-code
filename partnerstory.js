@@ -424,6 +424,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-document.addEventListener("DOMContentLoaded", (event) => {
-  document.querySelectorAll(".filter-select").forEach((el) => el.click());
+$(document).ready(function () {
+  $(".filter-select").each(function () {
+    $(this).click();
+  });
 });
