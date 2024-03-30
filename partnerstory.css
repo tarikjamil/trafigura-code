@@ -1,0 +1,24 @@
+.filter-select input {
+  opacity: 0;
+  position: absolute;
+}
+
+.filter-select label {
+  font-size: 18rem;
+  font-weight: 400;
+  color: #7563ad;
+  padding-left: 50rem;
+  padding-right: 30rem;
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.filter-select [data-is-continent="true"] + label {
+  font-size: 18rem;
+  font-weight: 600;
+  color: #7563ad;
+  padding-left: 30rem;
+  padding-right: 30rem;
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
