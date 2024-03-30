@@ -378,6 +378,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const options = wrapper.querySelector(".filter--options");
     const selectText = wrapper.querySelector(".filter--select-text");
     const radios = options.querySelectorAll('input[type="radio"]');
+    const resetButton = wrapper.querySelector(".btn--reset"); // Move reset button selector inside the loop
 
     // Toggle dropdown
     select.addEventListener("click", function () {
@@ -393,15 +394,17 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    // Reset functionality
-    const resetButton = document.getElementById("resetFilters");
-    resetButton.addEventListener("click", function () {
-      selectText.textContent = "Region/Country";
-      // Optionally, uncheck all radios within this wrapper
-      radios.forEach((radio) => {
-        radio.checked = false;
+    // Reset functionality scoped to each wrapper
+    if (resetButton) {
+      // Check if resetButton exists
+      resetButton.addEventListener("click", function () {
+        selectText.textContent = "Region/Country";
+        // Optionally, uncheck all radios within this wrapper
+        radios.forEach((radio) => {
+          radio.checked = false;
+        });
       });
-    });
+    }
   });
 
   // Clicking outside to close the dropdown
