@@ -57,10 +57,9 @@
 }
 
 .swiper {
-  width: 100%;
-  margin-left: 0;
-  overflow: auto;
-  margin-right: 0;
+  width: 100% !important;
+  margin-left: 0 !important;
+  overflow: auto !important;
 }
 
 .elementor-element .swiper-slide {
