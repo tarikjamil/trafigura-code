@@ -124,6 +124,24 @@ const swiper = new Swiper(".is--slider-resources", {
   },
 });
 
+const swiper = new Swiper(".elementor-image-carousel-wrapper", {
+  direction: "horizontal",
+  slidesPerView: 1, // Default to 1 slide per view for mobile and smaller viewports
+  slidesPerGroup: 1,
+  spaceBetween: "20rem",
+  loop: false,
+  centeredSlides: false,
+  // If we need pagination
+  // Define breakpoints
+  breakpoints: {
+    // When window width is >= 992px
+    992: {
+      slidesPerView: 1,
+      spaceBetween: "20rem",
+    },
+  },
+});
+
 const swiper2 = new Swiper(".is--circles-slider", {
   direction: "horizontal",
   slidesPerView: 3, // Default to 1 slide per view for mobile and smaller viewports
