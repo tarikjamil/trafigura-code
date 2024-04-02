@@ -56,6 +56,7 @@
   flex-basis: auto;
 }
 
-.elementor-element .swiper-slide .w-richtext figure {
+.elementor-element .swiper-slide .w-richtext figure,
+.swiper-slide-inner {
   max-width: 100%;
 }
