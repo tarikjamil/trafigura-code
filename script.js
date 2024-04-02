@@ -94,22 +94,32 @@ $(".navbar--dropdown-trigger").on("click", function () {
   $(this).toggleClass("open");
 });
 
-function tryInitializeNavLinks() {
-  if ($(".navlink.w--current").length) {
-    $(".navlink.w--current").each(function () {
-      $(this)
-        .closest(".navbar--dropdown")
-        .find(".navbar--dropdown-trigger")
-        .click();
-    });
-  } else {
-    // Try again in 500 ms
-    setTimeout(tryInitializeNavLinks, 500);
-  }
+// Function to execute when the target elements are ready
+function initializeDropdownForCurrentNavlink() {
+  $(".navlink.w--current").each(function () {
+    $(this)
+      .closest(".navbar--dropdown")
+      .find(".navbar--dropdown-trigger")
+      .click();
+  });
 }
 
-// Start the initial attempt
-$(window).on("load", tryInitializeNavLinks);
+// Setting up the MutationObserver
+var observer = new MutationObserver(function (mutations, obs) {
+  if ($(".navlink.w--current").length) {
+    initializeDropdownForCurrentNavlink();
+    obs.disconnect(); // Stop observing after the required elements are found
+  }
+});
+
+// Observer options - watching for subtree modifications, child addition or removal
+var config = { childList: true, subtree: true };
+
+// Target node - assuming 'body' but should be as specific as possible
+var target = document.querySelector("body");
+
+// Starting the observer
+observer.observe(target, config);
 
 // ------------------ team item click ------------------ //
 document.addEventListener("DOMContentLoaded", function () {
