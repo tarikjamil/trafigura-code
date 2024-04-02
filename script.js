@@ -124,7 +124,7 @@ const swiper = new Swiper(".is--slider-resources", {
   },
 });
 
-const swiper = new Swiper(".elementor-image-carousel-wrapper", {
+const swiper3 = new Swiper(".elementor-image-carousel-wrapper", {
   direction: "horizontal",
   slidesPerView: 1, // Default to 1 slide per view for mobile and smaller viewports
   slidesPerGroup: 1,
