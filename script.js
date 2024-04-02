@@ -95,14 +95,6 @@ $(".navbar--dropdown-trigger").on("click", function () {
 });
 
 // Function to run when navlinks are fully loaded
-function initializeNavLinks() {
-  $(".navlink.w--current").each(function () {
-    $(this)
-      .closest(".navbar--dropdown")
-      .find(".navbar--dropdown-trigger")
-      .click();
-  });
-}
 
 // Set up a MutationObserver to watch for changes in the navbar
 var observer = new MutationObserver(function (mutations) {
