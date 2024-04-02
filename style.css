@@ -16,6 +16,11 @@
   overflow: hidden !important;
 }
 
+.w-richtext a {
+  color: #7563ad;
+  font-weight: 600;
+}
+
 .filter--options {
   display: none;
 }
