@@ -94,29 +94,22 @@ $(".navbar--dropdown-trigger").on("click", function () {
   $(this).toggleClass("open");
 });
 
-// Function to run when navlinks are fully loaded
+function tryInitializeNavLinks() {
+  if ($(".navlink.w--current").length) {
+    $(".navlink.w--current").each(function () {
+      $(this)
+        .closest(".navbar--dropdown")
+        .find(".navbar--dropdown-trigger")
+        .click();
+    });
+  } else {
+    // Try again in 500 ms
+    setTimeout(tryInitializeNavLinks, 500);
+  }
+}
 
-// Set up a MutationObserver to watch for changes in the navbar
-var observer = new MutationObserver(function (mutations) {
-  mutations.forEach(function (mutation) {
-    if (mutation.type === "childList") {
-      // Check if the .navlink.w--current exists and initialize it
-      if ($(".navlink.w--current").length) {
-        initializeNavLinks();
-        observer.disconnect(); // Stop observing after initial setup to avoid infinite loops
-      }
-    }
-  });
-});
-
-// Options for the observer (which mutations to observe)
-var config = { attributes: true, childList: true, subtree: true };
-
-// Target node to observe
-var targetNode = document.querySelector("body"); // Adjust if you can target a narrower part of the DOM
-
-// Start observing
-observer.observe(targetNode, config);
+// Start the initial attempt
+$(window).on("load", tryInitializeNavLinks);
 
 // ------------------ team item click ------------------ //
 document.addEventListener("DOMContentLoaded", function () {
