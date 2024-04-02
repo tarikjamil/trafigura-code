@@ -159,3 +159,35 @@ const swiper3 = new Swiper(".is--gallery-slider", {
     },
   },
 });
+
+// ------------------ team item click ------------------ //
+document.addEventListener("DOMContentLoaded", function () {
+  // Listen for clicks on elements with the class 'team-item'
+  document.querySelectorAll(".team-item").forEach((item) => {
+    item.addEventListener("click", function () {
+      // Find the child element with class 'richtext--team'
+      var richtextTeam = this.querySelector(".richtext--team");
+
+      // Ensure richtextTeam exists
+      if (richtextTeam) {
+        // Clone the 'richtext--team' element
+        var clone = richtextTeam.cloneNode(true);
+
+        // Find the element with class 'is--team-content-toreset'
+        var contentToReset = document.querySelector(
+          ".is--team-content-toreset"
+        );
+
+        if (contentToReset) {
+          // Remove all children from 'is--team-content-toreset'
+          while (contentToReset.firstChild) {
+            contentToReset.removeChild(contentToReset.firstChild);
+          }
+
+          // Append the cloned 'richtext--team' element
+          contentToReset.appendChild(clone);
+        }
+      }
+    });
+  });
+});
