@@ -141,3 +141,21 @@ const swiper2 = new Swiper(".is--circles-slider", {
   },
   // Navigation arrows
 });
+
+const swiper3 = new Swiper(".is--gallery-slider", {
+  direction: "horizontal",
+  slidesPerView: 1, // Default to 1 slide per view for mobile and smaller viewports
+  slidesPerGroup: 1,
+  spaceBetween: "20rem",
+  loop: false,
+  centeredSlides: false,
+  // If we need pagination
+  // Define breakpoints
+  breakpoints: {
+    // When window width is >= 992px
+    992: {
+      slidesPerView: 1,
+      spaceBetween: "20rem",
+    },
+  },
+});
