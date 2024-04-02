@@ -48,3 +48,14 @@
     transform: translateX(calc(-1 * var(--scroll-width)));
   }
 }
+
+.swiper-slide {
+  width: 100%;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+}
+
+.elementor-element .swiper-slide .w-richtext figure {
+  max-width: 100%;
+}
