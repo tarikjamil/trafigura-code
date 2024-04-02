@@ -56,6 +56,13 @@
   flex-basis: auto;
 }
 
+.swiper {
+  width: 100%;
+  margin-left: 0;
+  overflow: auto;
+  margin-right: 0;
+}
+
 .elementor-element .swiper-slide {
   max-width: 100% !important;
   width: 100%;
