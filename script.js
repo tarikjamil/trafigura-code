@@ -57,69 +57,68 @@ document.querySelectorAll("[animation=fade]").forEach(function (fadeSplitElem) {
 });
 
 // ------------------ navbar - accordion ------------------ //
-$(".navbar--dropdown-trigger").on("click", function () {
-  // Close other accordions when opening a new one
-  if (!$(this).hasClass("open")) {
-    $(".navbar--dropdown-trigger.open").click();
-  }
+$(document).ready(function () {
+  // Event delegation for handling clicks on dynamically added elements
+  $(document).on("click", ".navbar--dropdown-trigger", function () {
+    // Close other accordions when opening a new one
+    if (!$(this).hasClass("open")) {
+      $(".navbar--dropdown-trigger.open").removeClass("open").click();
+    }
 
-  // Toggle the is--active class on the parent .navbar--dropdown
-  // It's important to toggle this before we check for the "open" class since we're about to toggle that
-  $(this).closest(".navbar--dropdown").toggleClass("is--active");
+    // Toggle the is--active class on the parent .navbar--dropdown
+    $(this).closest(".navbar--dropdown").toggleClass("is--active");
 
-  // Save the sibling of the toggle we clicked on
-  let sibling = $(this).siblings(".navbar--dropdown--list");
-  let animationDuration = 500;
+    // Save the sibling of the toggle we clicked on
+    let sibling = $(this).siblings(".navbar--dropdown--list");
+    let animationDuration = 500;
 
-  if ($(this).hasClass("open")) {
-    // Close the content div if already open
-    sibling.animate({ height: "0px" }, animationDuration, function () {
-      // It might be necessary to remove is--active class here if you want to remove it only after animation
-      // However, if the is--active class should mirror the open state regardless of animation, leave the toggleClass where it is
-    });
-  } else {
-    // Open the content div if already closed
-    sibling.css("height", "auto");
-    let autoHeight = sibling.height(); // Get the full height
-    sibling.css("height", "0px"); // Reset the height
-    sibling.animate({ height: autoHeight }, animationDuration, function () {
-      sibling.css("height", "auto"); // Set the height to auto after the animation
+    if ($(this).hasClass("open")) {
+      // Close the content div if already open
+      sibling.animate({ height: "0px" }, animationDuration, function () {
+        // After animation, reset height to 0 to ensure it's closed
+        sibling.css("height", "0px");
+      });
+    } else {
+      // Open the content div if already closed
+      sibling.css("height", "auto");
+      let autoHeight = sibling.height(); // Get the full height
+      sibling.css("height", "0px"); // Reset the height
+      sibling.animate({ height: autoHeight }, animationDuration, function () {
+        sibling.css("height", "auto"); // Set the height to auto after the animation
+      });
+    }
 
-      // Scroll the page to the accordion, leaving 200 pixels from the top
-      // Additional functionality for scrolling can be added here if needed
-    });
-  }
-
-  // Open and close the toggle div
-  $(this).toggleClass("open");
-});
-
-// Function to execute when the target elements are ready
-function initializeDropdownForCurrentNavlink() {
-  $(".navlink.w--current").each(function () {
-    $(this)
-      .closest(".navbar--dropdown")
-      .find(".navbar--dropdown-trigger")
-      .click();
+    // Open and close the toggle div
+    $(this).toggleClass("open");
   });
-}
 
-// Setting up the MutationObserver
-var observer = new MutationObserver(function (mutations, obs) {
-  if ($(".navlink.w--current").length) {
-    initializeDropdownForCurrentNavlink();
-    obs.disconnect(); // Stop observing after the required elements are found
+  // Function to execute when the target elements are ready
+  function initializeDropdownForCurrentNavlink() {
+    $(".navlink.w--current").each(function () {
+      $(this)
+        .closest(".navbar--dropdown")
+        .find(".navbar--dropdown-trigger")
+        .click();
+    });
   }
+
+  // Setting up the MutationObserver to handle dynamic content loading
+  var observer = new MutationObserver(function (mutations, obs) {
+    if ($(".navlink.w--current").length) {
+      initializeDropdownForCurrentNavlink();
+      obs.disconnect(); // Stop observing after the required elements are found
+    }
+  });
+
+  // Observer options - watching for subtree modifications, child addition or removal
+  var config = { childList: true, subtree: true };
+
+  // Target node - assuming 'body' but should be as specific as possible
+  var target = document.querySelector("body");
+
+  // Starting the observer
+  observer.observe(target, config);
 });
-
-// Observer options - watching for subtree modifications, child addition or removal
-var config = { childList: true, subtree: true };
-
-// Target node - assuming 'body' but should be as specific as possible
-var target = document.querySelector("body");
-
-// Starting the observer
-observer.observe(target, config);
 
 // ------------------ team item click ------------------ //
 document.addEventListener("DOMContentLoaded", function () {
