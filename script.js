@@ -104,18 +104,29 @@ jQuery(document).ready(function ($) {
   });
 
   function initializeOrRefreshDropdownLogic() {
-    console.log("Refreshing dropdown logic for dynamic content.");
-    $(".navbar--dropdown-trigger").each(function () {
-      const $trigger = $(this);
-      // Only trigger a click on dropdown triggers that contain a .navlink.w--current
-      if (
-        $trigger.siblings(".navbar--dropdown--list").find(".navlink.w--current")
-          .length > 0 &&
-        !$trigger.hasClass("open")
-      ) {
-        $trigger.click();
-      }
-    });
+    // Introduce a slight delay to allow for external processes to complete
+    setTimeout(function () {
+      console.log(
+        "Refreshing dropdown logic for dynamic content after a slight delay."
+      );
+      $(".navbar--dropdown-trigger").each(function () {
+        const $trigger = $(this);
+        const currentLinks = $trigger
+          .siblings(".navbar--dropdown--list")
+          .find(".navlink.w--current").length;
+        console.log(
+          "Found " +
+            currentLinks +
+            " .navlink.w--current elements within dropdown."
+        );
+
+        // Only trigger a click on dropdown triggers that contain a .navlink.w--current
+        if (currentLinks > 0 && !$trigger.hasClass("open")) {
+          console.log("Automatically opening a dropdown for dynamic content.");
+          $trigger.click();
+        }
+      });
+    }, 500); // Adjust this delay as needed
   }
 
   const observer = new MutationObserver(function (mutations) {
