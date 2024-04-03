@@ -59,11 +59,11 @@ document.querySelectorAll("[animation=fade]").forEach(function (fadeSplitElem) {
 // ------------------ navbar - accordion ------------------ //
 
 jQuery(document).ready(function ($) {
-  console.log("Dropdown script initialized."); // Debugging log
+  console.log("Dropdown script initialized.");
 
   function toggleDropdown($trigger) {
     const isOpen = $trigger.hasClass("open");
-    console.log("Toggling dropdown:", isOpen ? "Closing" : "Opening"); // Debugging log
+    console.log("Toggling dropdown:", isOpen ? "Closing" : "Opening");
 
     $(".navbar--dropdown-trigger.open")
       .not($trigger)
@@ -78,7 +78,7 @@ jQuery(document).ready(function ($) {
 
   function toggleContent($trigger, isOpen) {
     const $sibling = $trigger.siblings(".navbar--dropdown--list");
-    console.log("Toggle content:", isOpen ? "Closing" : "Opening", $sibling); // Debugging log
+    console.log("Toggle content:", isOpen ? "Closing" : "Opening", $sibling);
 
     if (isOpen) {
       $sibling.animate({ height: "0px" }, 500, function () {
@@ -103,15 +103,20 @@ jQuery(document).ready(function ($) {
     }
   });
 
-  // Initialize or refresh logic (kept for future use if needed)
   function initializeOrRefreshDropdownLogic() {
     console.log("Refreshing dropdown logic for dynamic content.");
+    $(".navbar--dropdown-trigger:not(.open)").each(function () {
+      const $trigger = $(this);
+      // Here, you can add conditions to filter which dropdowns to open automatically
+      // For demonstration, this triggers a click on all unopened dropdowns
+      $trigger.click();
+    });
   }
 
   const observer = new MutationObserver(function (mutations) {
     mutations.forEach((mutation) => {
       if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-        console.log("MutationObserver: Child added."); // Debugging log
+        console.log("MutationObserver: Child added.");
         initializeOrRefreshDropdownLogic();
       }
     });
