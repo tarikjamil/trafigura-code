@@ -57,7 +57,8 @@ document.querySelectorAll("[animation=fade]").forEach(function (fadeSplitElem) {
 });
 
 // ------------------ navbar - accordion ------------------ //
-$(document).ready(function () {
+
+jQuery(document).ready(function ($) {
   // Improved event delegation with checks
   $(document).on("click", ".navbar--dropdown-trigger", function () {
     const $trigger = $(this);
