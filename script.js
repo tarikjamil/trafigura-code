@@ -107,6 +107,15 @@ $(document).ready(function () {
     $trigger.closest(".navbar--dropdown").toggleClass("is--active");
   }
 
+  // Define the missing function to open the dropdown for the current nav link
+  function initializeDropdownForCurrentNavlink() {
+    $(".navlink.w--current")
+      .closest(".navbar--dropdown")
+      .find(".navbar--dropdown-trigger")
+      .not(".open")
+      .click();
+  }
+
   // Setting up the MutationObserver to handle dynamic content loading
   var observer = new MutationObserver(function (mutations, obs) {
     if ($(".navlink.w--current").length) {
