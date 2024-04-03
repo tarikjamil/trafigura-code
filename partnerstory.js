@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
     Tokelau: "Oceania",
     "Pitcairn Islands": "Oceania",
     "Wallis and Futuna": "Oceania",
-    Others: "Worldwide",
+    Worldwide: "Worldwide",
   };
 
   setPartnerContinents();
