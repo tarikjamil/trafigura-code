@@ -58,48 +58,53 @@ document.querySelectorAll("[animation=fade]").forEach(function (fadeSplitElem) {
 
 // ------------------ navbar - accordion ------------------ //
 $(document).ready(function () {
-  // Event delegation for handling clicks on dynamically added elements
+  // Improved event delegation with checks
   $(document).on("click", ".navbar--dropdown-trigger", function () {
-    // Close other accordions when opening a new one
-    if (!$(this).hasClass("open")) {
-      $(".navbar--dropdown-trigger.open").removeClass("open").click();
+    const $trigger = $(this);
+
+    // Ensure the content is ready to be toggled
+    if (!$trigger.data("animating")) {
+      $trigger.data("animating", true);
+      toggleDropdown($trigger);
     }
-
-    // Toggle the is--active class on the parent .navbar--dropdown
-    $(this).closest(".navbar--dropdown").toggleClass("is--active");
-
-    // Save the sibling of the toggle we clicked on
-    let sibling = $(this).siblings(".navbar--dropdown--list");
-    let animationDuration = 500;
-
-    if ($(this).hasClass("open")) {
-      // Close the content div if already open
-      sibling.animate({ height: "0px" }, animationDuration, function () {
-        // After animation, reset height to 0 to ensure it's closed
-        sibling.css("height", "0px");
-      });
-    } else {
-      // Open the content div if already closed
-      sibling.css("height", "auto");
-      let autoHeight = sibling.height(); // Get the full height
-      sibling.css("height", "0px"); // Reset the height
-      sibling.animate({ height: autoHeight }, animationDuration, function () {
-        sibling.css("height", "auto"); // Set the height to auto after the animation
-      });
-    }
-
-    // Open and close the toggle div
-    $(this).toggleClass("open");
   });
 
-  // Function to execute when the target elements are ready
-  function initializeDropdownForCurrentNavlink() {
-    $(".navlink.w--current").each(function () {
-      $(this)
-        .closest(".navbar--dropdown")
-        .find(".navbar--dropdown-trigger")
-        .click();
-    });
+  function toggleDropdown($trigger) {
+    // Close other accordions when opening a new one
+    if (!$trigger.hasClass("open")) {
+      $(".navbar--dropdown-trigger.open").each(function () {
+        toggleContent($(this), true);
+      });
+    }
+
+    toggleContent($trigger, $trigger.hasClass("open"));
+    $trigger.toggleClass("open");
+  }
+
+  function toggleContent($trigger, isOpen) {
+    const $sibling = $trigger.siblings(".navbar--dropdown--list");
+    const animationDuration = 500;
+
+    if (isOpen) {
+      // Close the content div
+      $sibling.animate({ height: "0px" }, animationDuration, function () {
+        $sibling.css("height", "0px");
+        $trigger.data("animating", false);
+      });
+    } else {
+      // Open the content div
+      $sibling.css("height", "auto");
+      let autoHeight = $sibling.height();
+      $sibling.css("height", "0px");
+
+      $sibling.animate({ height: autoHeight }, animationDuration, function () {
+        $sibling.css("height", "auto");
+        $trigger.data("animating", false);
+      });
+    }
+
+    // Toggle is--active class on the parent
+    $trigger.closest(".navbar--dropdown").toggleClass("is--active");
   }
 
   // Setting up the MutationObserver to handle dynamic content loading
