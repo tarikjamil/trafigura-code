@@ -105,11 +105,16 @@ jQuery(document).ready(function ($) {
 
   function initializeOrRefreshDropdownLogic() {
     console.log("Refreshing dropdown logic for dynamic content.");
-    $(".navbar--dropdown-trigger:not(.open)").each(function () {
+    $(".navbar--dropdown-trigger").each(function () {
       const $trigger = $(this);
-      // Here, you can add conditions to filter which dropdowns to open automatically
-      // For demonstration, this triggers a click on all unopened dropdowns
-      $trigger.click();
+      // Only trigger a click on dropdown triggers that contain a .navlink.w--current
+      if (
+        $trigger.siblings(".navbar--dropdown--list").find(".navlink.w--current")
+          .length > 0 &&
+        !$trigger.hasClass("open")
+      ) {
+        $trigger.click();
+      }
     });
   }
 
