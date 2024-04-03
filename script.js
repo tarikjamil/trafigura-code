@@ -59,77 +59,76 @@ document.querySelectorAll("[animation=fade]").forEach(function (fadeSplitElem) {
 // ------------------ navbar - accordion ------------------ //
 
 jQuery(document).ready(function ($) {
-  // Improved event delegation with checks
+  // Function to handle dropdown toggle
+  function toggleDropdown($trigger) {
+    const isOpen = $trigger.hasClass("open");
+    // Close other open dropdowns
+    $(".navbar--dropdown-trigger.open")
+      .not($trigger)
+      .each(function () {
+        toggleContent($(this), true); // Force close other dropdowns
+        $(this).removeClass("open");
+      });
+
+    // Toggle current dropdown
+    toggleContent($trigger, isOpen);
+    $trigger.toggleClass("open", !isOpen);
+  }
+
+  // Function to toggle content visibility
+  function toggleContent($trigger, isOpen) {
+    const $sibling = $trigger.siblings(".navbar--dropdown--list");
+    const animationDuration = 500;
+
+    if (isOpen) {
+      $sibling.animate({ height: "0px" }, animationDuration, function () {
+        $(this).css("height", "0px").removeClass("is--active");
+        $trigger.data("animating", false);
+      });
+    } else {
+      const autoHeight = $sibling.css("height", "auto").height();
+      $sibling.height("0px"); // Reset height to transition from 0
+      $sibling.animate(
+        { height: autoHeight + "px" },
+        animationDuration,
+        function () {
+          $(this).css("height", "auto").addClass("is--active");
+          $trigger.data("animating", false);
+        }
+      );
+    }
+  }
+
+  // Event delegation for dynamically added dropdown triggers
   $(document).on("click", ".navbar--dropdown-trigger", function () {
     const $trigger = $(this);
-
-    // Ensure the content is ready to be toggled
     if (!$trigger.data("animating")) {
       $trigger.data("animating", true);
       toggleDropdown($trigger);
     }
   });
 
-  function toggleDropdown($trigger) {
-    // Close other accordions when opening a new one
-    if (!$trigger.hasClass("open")) {
-      $(".navbar--dropdown-trigger.open").each(function () {
-        toggleContent($(this), true);
-      });
-    }
-
-    toggleContent($trigger, $trigger.hasClass("open"));
-    $trigger.toggleClass("open");
+  // Initialize or refresh logic for dropdowns, if needed
+  function initializeOrRefreshDropdownLogic() {
+    console.log("Refreshing dropdown logic for dynamic content.");
+    // Add any specific logic here if you need to reinitialize state or bindings after AJAX content loads
   }
 
-  function toggleContent($trigger, isOpen) {
-    const $sibling = $trigger.siblings(".navbar--dropdown--list");
-    const animationDuration = 500;
-
-    if (isOpen) {
-      // Close the content div
-      $sibling.animate({ height: "0px" }, animationDuration, function () {
-        $sibling.css("height", "0px");
-        $trigger.data("animating", false);
-      });
-    } else {
-      // Open the content div
-      $sibling.css("height", "auto");
-      let autoHeight = $sibling.height();
-      $sibling.css("height", "0px");
-
-      $sibling.animate({ height: autoHeight }, animationDuration, function () {
-        $sibling.css("height", "auto");
-        $trigger.data("animating", false);
-      });
-    }
-
-    // Toggle is--active class on the parent
-    $trigger.closest(".navbar--dropdown").toggleClass("is--active");
-  }
-
-  // Define the missing function to open the dropdown for the current nav link
-  function initializeDropdownForCurrentNavlink() {
-    $(".navlink.w--current")
-      .closest(".navbar--dropdown")
-      .find(".navbar--dropdown-trigger")
-      .not(".open")
-      .click();
-  }
-
-  // Setting up the MutationObserver to handle dynamic content loading
-  var observer = new MutationObserver(function (mutations, obs) {
-    if ($(".navlink.w--current").length) {
-      initializeDropdownForCurrentNavlink();
-      obs.disconnect(); // Stop observing after the required elements are found
+  // MutationObserver to handle dynamic content loading
+  const observer = new MutationObserver(function (mutations, obs) {
+    for (let mutation of mutations) {
+      if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+        initializeOrRefreshDropdownLogic();
+        break; // Exit loop after handling initialization
+      }
     }
   });
 
   // Observer options - watching for subtree modifications, child addition or removal
-  var config = { childList: true, subtree: true };
+  const config = { childList: true, subtree: true };
 
   // Target node - assuming 'body' but should be as specific as possible
-  var target = document.querySelector("body");
+  const target = document.querySelector("body");
 
   // Starting the observer
   observer.observe(target, config);
