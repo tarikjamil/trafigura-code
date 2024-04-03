@@ -59,47 +59,42 @@ document.querySelectorAll("[animation=fade]").forEach(function (fadeSplitElem) {
 // ------------------ navbar - accordion ------------------ //
 
 jQuery(document).ready(function ($) {
-  // Function to handle dropdown toggle
+  console.log("Dropdown script initialized."); // Debugging log
+
   function toggleDropdown($trigger) {
     const isOpen = $trigger.hasClass("open");
-    // Close other open dropdowns
+    console.log("Toggling dropdown:", isOpen ? "Closing" : "Opening"); // Debugging log
+
     $(".navbar--dropdown-trigger.open")
       .not($trigger)
       .each(function () {
-        toggleContent($(this), true); // Force close other dropdowns
+        toggleContent($(this), true);
         $(this).removeClass("open");
       });
 
-    // Toggle current dropdown
     toggleContent($trigger, isOpen);
     $trigger.toggleClass("open", !isOpen);
   }
 
-  // Function to toggle content visibility
   function toggleContent($trigger, isOpen) {
     const $sibling = $trigger.siblings(".navbar--dropdown--list");
-    const animationDuration = 500;
+    console.log("Toggle content:", isOpen ? "Closing" : "Opening", $sibling); // Debugging log
 
     if (isOpen) {
-      $sibling.animate({ height: "0px" }, animationDuration, function () {
+      $sibling.animate({ height: "0px" }, 500, function () {
         $(this).css("height", "0px").removeClass("is--active");
         $trigger.data("animating", false);
       });
     } else {
       const autoHeight = $sibling.css("height", "auto").height();
-      $sibling.height("0px"); // Reset height to transition from 0
-      $sibling.animate(
-        { height: autoHeight + "px" },
-        animationDuration,
-        function () {
-          $(this).css("height", "auto").addClass("is--active");
-          $trigger.data("animating", false);
-        }
-      );
+      $sibling.height("0px");
+      $sibling.animate({ height: autoHeight + "px" }, 500, function () {
+        $(this).css("height", "auto").addClass("is--active");
+        $trigger.data("animating", false);
+      });
     }
   }
 
-  // Event delegation for dynamically added dropdown triggers
   $(document).on("click", ".navbar--dropdown-trigger", function () {
     const $trigger = $(this);
     if (!$trigger.data("animating")) {
@@ -108,30 +103,21 @@ jQuery(document).ready(function ($) {
     }
   });
 
-  // Initialize or refresh logic for dropdowns, if needed
+  // Initialize or refresh logic (kept for future use if needed)
   function initializeOrRefreshDropdownLogic() {
     console.log("Refreshing dropdown logic for dynamic content.");
-    // Add any specific logic here if you need to reinitialize state or bindings after AJAX content loads
   }
 
-  // MutationObserver to handle dynamic content loading
-  const observer = new MutationObserver(function (mutations, obs) {
-    for (let mutation of mutations) {
+  const observer = new MutationObserver(function (mutations) {
+    mutations.forEach((mutation) => {
       if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+        console.log("MutationObserver: Child added."); // Debugging log
         initializeOrRefreshDropdownLogic();
-        break; // Exit loop after handling initialization
       }
-    }
+    });
   });
 
-  // Observer options - watching for subtree modifications, child addition or removal
-  const config = { childList: true, subtree: true };
-
-  // Target node - assuming 'body' but should be as specific as possible
-  const target = document.querySelector("body");
-
-  // Starting the observer
-  observer.observe(target, config);
+  observer.observe(document.body, { childList: true, subtree: true });
 });
 
 // ------------------ team item click ------------------ //
