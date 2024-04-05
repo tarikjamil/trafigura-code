@@ -173,12 +173,49 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// ------------------ date format ------------------ //
+document.addEventListener("DOMContentLoaded", (event) => {
+  // Function to format the date
+  function formatDate(d) {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return `${("0" + d.getDate()).slice(-2)} ${
+      months[d.getMonth()]
+    } ${d.getFullYear()}`;
+  }
+
+  // Find all elements with the class 'text-date'
+  const dateElements = document.querySelectorAll(".text-date");
+
+  dateElements.forEach((element) => {
+    // Assuming the date is in 'YYYY-MM-DD HH:MM:SS' format
+    const dateParts = element.textContent.trim().split(/[- :]/);
+    // Adjust month (-1) because months are 0-indexed in JavaScript Date objects
+    const dateObject = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
+    // Update the text content of the element with the formatted date
+    element.textContent = formatDate(dateObject);
+  });
+});
+
 // ------------------ Swiper ------------------ //
 
 $(".is--gallery-slider").append(`
     <div class="swiper-arrows">
     <a href="/partners-stories" class="swiper-button-prev is--shadow w-inline-block"><svg class="icon-arrow" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 17.589 13.87"><path id="Tracé_54632" data-name="Tracé 54632" d="M8.769,0V3.97H0V9.9H8.769v3.97l8.819-6.935Z" transform="translate(17.588 13.87) rotate(180)" fill="currentColor"></path></svg></a>
-    
+
     <a href="/partners-stories" class="swiper-button-next is--shadow w-inline-block"><svg class="icon-arrow" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 17.589 13.87"><path id="Tracé_42314" data-name="Tracé 42314" d="M8.769,0V3.97H0V9.9H8.769v3.97l8.819-6.935Z" transform="translate(0 0)" fill="currentColor"></path></svg></a>
     </div>
 `);
