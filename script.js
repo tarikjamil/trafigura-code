@@ -175,6 +175,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ------------------ Swiper ------------------ //
 
+$(".is--gallery-slider").append(`
+    <div class="swiper-arrows"><a href="/partners-stories" class="swiper-button-prev is--shadow w-inline-block"><svg class="icon-arrow" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 17.589 13.87"><path id="Tracé_54632" data-name="Tracé 54632" d="M8.769,0V3.97H0V9.9H8.769v3.97l8.819-6.935Z" transform="translate(17.588 13.87) rotate(180)" fill="currentColor"></path></svg></a><a href="/partners-stories" class="swiper-button-next is--shadow w-inline-block"><svg class="icon-arrow" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 17.589 13.87"><path id="Tracé_42314" data-name="Tracé 42314" d="M8.769,0V3.97H0V9.9H8.769v3.97l8.819-6.935Z" transform="translate(0 0)" fill="currentColor"></path></svg></a></div>
+`);
+
 const swiper = new Swiper(".is--slider-resources", {
   direction: "horizontal",
   slidesPerView: 1, // Default to 1 slide per view for mobile and smaller viewports
