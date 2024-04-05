@@ -81,9 +81,6 @@
   align-items: center;
   width: 78rem !important;
   height: 78rem !important;
-  transition-property: all;
-  transition-duration: 0.2s;
-  transition-timing-function: ease !important;
   display: flex !important;
 }
 
