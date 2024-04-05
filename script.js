@@ -231,4 +231,8 @@ const swiper3 = new Swiper(".is--gallery-slider", {
       spaceBetween: "20rem",
     },
   },
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
+  },
 });
