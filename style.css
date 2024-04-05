@@ -93,3 +93,7 @@
 .swiper-button-next.is--shadow:hover {
   color: white !important;
 }
+
+.text-date {
+  width: auto;
+}
