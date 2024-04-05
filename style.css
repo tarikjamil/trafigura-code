@@ -88,3 +88,8 @@
 .swiper-button-next:after {
   content: none !important;
 }
+
+.swiper-button-prev.is--shadow:hover,
+.swiper-button-next.is--shadow:hover {
+  color: white !important;
+}
