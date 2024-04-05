@@ -66,3 +66,28 @@
   max-width: 100% !important;
   width: 100%;
 }
+
+.swiper-button-prev.is--shadow,
+.swiper-button-next.is--shadow {
+  border-style: solid;
+  border-width: 1rem;
+  border-top-color: inherit !important;
+  border-right-color: inherit !important;
+  border-bottom-color: inherit !important;
+  border-left-color: inherit !important;
+  color: inherit !important;
+  border-radius: 100%;
+  justify-content: center;
+  align-items: center;
+  width: 78rem !important;
+  height: 78rem !important;
+  transition-property: all;
+  transition-duration: 0.2s;
+  transition-timing-function: ease !important;
+  display: flex !important;
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  content: "none";
+}
