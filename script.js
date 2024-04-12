@@ -210,6 +210,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
   });
 });
 
+// ------------------ tags color change ------------------ //
+
+$(document).ready(function () {
+  $(".tag-category > div").each(function () {
+    var text = $(this).text().trim();
+    if (text === "News") {
+      $(this).parent().css("background-color", "#7563AD");
+    } else if (text === "Insight") {
+      $(this).parent().css("background-color", "#00ACD7");
+    }
+  });
+});
+
 // ------------------ Swiper ------------------ //
 
 $(".is--gallery-slider").append(`
@@ -276,17 +289,4 @@ const swiper3 = new Swiper(".is--gallery-slider", {
     nextEl: ".swiper-button-next",
     prevEl: ".swiper-button-prev",
   },
-});
-
-// ------------------ tags color change ------------------ //
-
-$(document).ready(function () {
-  $(".tag-category > div").each(function () {
-    var text = $(this).text().trim();
-    if (text === "News") {
-      $(this).parent().css("background-color", "#7563AD");
-    } else if (text === "Insight") {
-      $(this).parent().css("background-color", "#00ACD7");
-    }
-  });
 });
