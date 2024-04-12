@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setPartnerContinents();
   populateRegionFilter();
   populateFilter("areaFilter", ".partner--area", false); // Disabled auto-population for areaFilter
-  populateFilter("stateFilter", ".partner--state", false);
+  populateFilter("stateFilter", ".partner--state", false); // Disabled auto-population for stateFilter
 
   function setPartnerContinents() {
     document.querySelectorAll(".partner--item").forEach((item) => {
@@ -277,7 +277,11 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  function populateFilter(selector, attribute) {
+  function populateFilter(selector, attribute, autoPopulate) {
+    if (!autoPopulate) {
+      return; // Skip auto-population
+    }
+
     const filterContainer = document.getElementById(selector);
     const items = document.querySelectorAll(".partner--item");
     const uniqueValues = new Set();
@@ -309,33 +313,18 @@ document.addEventListener("DOMContentLoaded", function () {
     return wrapper;
   }
 
-  // Reset filters function
-  const resetFilters = () => {
-    document
-      .querySelectorAll('input[name="regionFilter"]')
-      .forEach((rb) => (rb.checked = false));
-    filterItems(); // Call filterItems to reset the filtering
-    document
-      .querySelectorAll('input[name="areaFilter"]')
-      .forEach((rb) => (rb.checked = false));
-    filterItems(); // Call filterItems to reset the filtering
-    document
-      .querySelectorAll('input[name="stateFilter"]')
-      .forEach((rb) => (rb.checked = false));
-    filterItems(); // Call filterItems to reset the filtering
-  };
-
   document
     .getElementById("resetFilters")
-    .addEventListener("click", resetFilters);
+    .addEventListener("click", function () {
+      document.querySelectorAll('input[type="radio"]').forEach((input) => {
+        input.checked = false;
+      });
+      filterItems();
+    });
 
-  document
-    .getElementById("regionFilter")
-    .addEventListener("change", filterItems);
-  document.getElementById("areaFilter").addEventListener("change", filterItems);
-  document
-    .getElementById("stateFilter")
-    .addEventListener("change", filterItems);
+  document.querySelectorAll("[data-filter]").forEach((element) => {
+    element.addEventListener("change", filterItems);
+  });
 
   function filterItems() {
     const selectedRegion = document.querySelector(
