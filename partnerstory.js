@@ -1,11 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   const countryToContinent = {
-    // North America
     Canada: "North America",
     "United States": "North America",
     Mexico: "North America",
-
-    // Central America
     Belize: "Central America",
     "Costa Rica": "Central America",
     "El Salvador": "Central America",
@@ -13,8 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
     Honduras: "Central America",
     Nicaragua: "Central America",
     Panama: "Central America",
-
-    // Caribbean
     "Antigua and Barbuda": "North America",
     Bahamas: "North America",
     Barbados: "North America",
@@ -28,8 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
     "Saint Lucia": "North America",
     "Saint Vincent and the Grenadines": "North America",
     "Trinidad and Tobago": "North America",
-
-    // South America
     Argentina: "South America",
     Bolivia: "South America",
     Brazil: "South America",
@@ -42,8 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
     Suriname: "South America",
     Uruguay: "South America",
     Venezuela: "South America",
-
-    // Europe
     Albania: "Europe",
     Andorra: "Europe",
     Austria: "Europe",
@@ -90,8 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
     "Vatican City": "Europe",
     Cyprus: "Europe",
     Georgia: "Europe",
-
-    // Asia
     Kazakhstan: "Asia",
     Russia: "Europe",
     Turkey: "Asia",
@@ -140,8 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
     Uzbekistan: "Asia",
     Vietnam: "Asia",
     Yemen: "Middle East",
-
-    // Africa
     Algeria: "Africa",
     Angola: "Africa",
     Benin: "Africa",
@@ -195,8 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
     Uganda: "Africa",
     Zambia: "Africa",
     Zimbabwe: "Africa",
-
-    // Oceania
     Australia: "Oceania",
     Fiji: "Oceania",
     Kiribati: "Oceania",
@@ -226,8 +211,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   setPartnerContinents();
   populateRegionFilter();
-  populateFilter("areaFilter", ".partner--area", false); // Disabled auto-population for areaFilter
-  populateFilter("stateFilter", ".partner--state", false); // Disabled auto-population for stateFilter
+  populateFilter("areaFilter", ".partner--area", false);
+  populateFilter("stateFilter", ".partner--state", false);
 
   function setPartnerContinents() {
     document.querySelectorAll(".partner--item").forEach((item) => {
@@ -261,7 +246,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     });
-
     const filterContainer = document.getElementById("regionFilter");
     Object.keys(continentCountries)
       .sort()
@@ -279,9 +263,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function populateFilter(selector, attribute, autoPopulate) {
     if (!autoPopulate) {
-      return; // Skip auto-population
+      return;
     }
-
     const filterContainer = document.getElementById(selector);
     const items = document.querySelectorAll(".partner--item");
     const uniqueValues = new Set();
@@ -313,18 +296,23 @@ document.addEventListener("DOMContentLoaded", function () {
     return wrapper;
   }
 
+  const resetFilters = () => {
+    document
+      .querySelectorAll('input[type="radio"]')
+      .forEach((rb) => (rb.checked = false));
+    filterItems();
+  };
+
   document
     .getElementById("resetFilters")
-    .addEventListener("click", function () {
-      document.querySelectorAll('input[type="radio"]').forEach((input) => {
-        input.checked = false;
-      });
-      filterItems();
-    });
-
-  document.querySelectorAll("[data-filter]").forEach((element) => {
-    element.addEventListener("change", filterItems);
-  });
+    .addEventListener("click", resetFilters);
+  document
+    .getElementById("regionFilter")
+    .addEventListener("change", filterItems);
+  document.getElementById("areaFilter").addEventListener("change", filterItems);
+  document
+    .getElementById("stateFilter")
+    .addEventListener("change", filterItems);
 
   function filterItems() {
     const selectedRegion = document.querySelector(
@@ -359,38 +347,28 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// ------------------- select animation ------------------- //
 document.addEventListener("DOMContentLoaded", function () {
   const selectWrappers = document.querySelectorAll(".filter--select-wrapper");
-
-  // Initially hide all .filter--options elements
   document.querySelectorAll(".filter--options").forEach((options) => {
     options.style.display = "none";
   });
-
-  // Store initial texts in an array
   const initialTexts = Array.from(selectWrappers).map(
     (wrapper) => wrapper.querySelector(".filter--select-text").textContent
   );
-
   selectWrappers.forEach((wrapper, index) => {
     const select = wrapper.querySelector(".filter-select");
     const options = wrapper.querySelector(".filter--options");
     const selectText = wrapper.querySelector(".filter--select-text");
-
     select.addEventListener("click", function () {
       options.style.display =
         options.style.display === "block" ? "none" : "block";
     });
-
     options.addEventListener("change", function (e) {
       if (e.target && e.target.matches('input[type="radio"]')) {
         selectText.textContent = e.target.nextElementSibling.textContent;
         options.style.display = "none";
       }
     });
-
-    // Close dropdown when clicking outside
     document.addEventListener(
       "click",
       function (event) {
@@ -399,21 +377,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       },
       true
-    ); // Using capture phase
+    );
   });
-
-  // Reset functionality
   const resetButton = document.querySelector(".btn--reset");
   if (resetButton) {
     resetButton.addEventListener("click", function () {
       selectWrappers.forEach((wrapper, index) => {
         const selectText = wrapper.querySelector(".filter--select-text");
         const radios = wrapper.querySelectorAll('input[type="radio"]');
-
-        // Reset text to its initial value
         selectText.textContent = initialTexts[index];
-
-        // Uncheck all radios
         radios.forEach((radio) => (radio.checked = false));
       });
     });
