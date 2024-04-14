@@ -277,6 +277,7 @@ const swiper3 = new Swiper(".is--gallery-slider", {
   loop: false,
   centeredSlides: false,
   effect: "cards",
+  grabCursor: true,
   // If we need pagination
   // Define breakpoints
   breakpoints: {
