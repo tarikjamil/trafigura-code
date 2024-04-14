@@ -278,6 +278,8 @@ const swiper3 = new Swiper(".is--gallery-slider", {
   centeredSlides: false,
   effect: "cards",
   grabCursor: true,
+  perSlideOffset: "115rem",
+  rotate: false,
   // If we need pagination
   // Define breakpoints
   breakpoints: {
