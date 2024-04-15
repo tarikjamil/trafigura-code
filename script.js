@@ -217,8 +217,12 @@ document.addEventListener("DOMContentLoaded", function () {
   dateElements.forEach(function (elem) {
     // Get the current text, which is the date
     let currentText = elem.textContent.trim();
-    // Convert the date format from "YYYY-MM-DD HH:MM:SS" to "YYYY.MM.DD"
-    let formattedDate = currentText.split(" ")[0].replace(/-/g, ".");
+    // Split the date by spaces to separate the date from the time, if any
+    let datePart = currentText.split(" ")[0];
+    // Split the date into components [YYYY, MM, DD]
+    let dateComponents = datePart.split("-");
+    // Reformat the date to "DD.MM.YYYY"
+    let formattedDate = `${dateComponents[2]}.${dateComponents[1]}.${dateComponents[0]}`;
     // Update the text in the element
     elem.textContent = formattedDate;
   });
