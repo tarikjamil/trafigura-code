@@ -97,3 +97,11 @@
 .text-date {
   width: auto;
 }
+
+.swiper-3d .swiper-slide-shadow {
+  background: transparent !important;
+}
+
+.swiper-cards .swiper-slide {
+  overflow: visible !important;
+}
