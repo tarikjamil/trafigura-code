@@ -210,6 +210,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
   });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+  // Select all elements with the class "text-14 is--date"
+  let dateElements = document.querySelectorAll(".text-14.is--date");
+
+  dateElements.forEach(function (elem) {
+    // Get the current text, which is the date
+    let currentText = elem.textContent.trim();
+    // Convert the date format from "YYYY-MM-DD HH:MM:SS" to "YYYY.MM.DD"
+    let formattedDate = currentText.split(" ")[0].replace(/-/g, ".");
+    // Update the text in the element
+    elem.textContent = formattedDate;
+  });
+});
+
 // ------------------ tags color change ------------------ //
 
 $(document).ready(function () {
