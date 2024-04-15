@@ -225,17 +225,17 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // ------------------ tags color change ------------------ //
-
-$(document).ready(function () {
-  $(".tag-category > div").each(function () {
-    var text = $(this).text().trim();
-    if (text === "News") {
-      $(this).parent().css("background-color", "#7563AD");
-    } else if (text === "Insight") {
-      $(this).parent().css("background-color", "#00ACD7");
-    }
-  });
-});
+//
+// $(document).ready(function () {
+//   $(".tag-category > div").each(function () {
+//     var text = $(this).text().trim();
+//     if (text === "News") {
+//       $(this).parent().css("background-color", "#7563AD");
+//     } else if (text === "Insight") {
+//       $(this).parent().css("background-color", "#00ACD7");
+//     }
+//   });
+// });
 
 // ------------------ Swiper ------------------ //
 
