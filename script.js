@@ -255,7 +255,7 @@ const swiper2 = new Swiper(".is--circles-slider", {
   direction: "horizontal",
   slidesPerView: 3, // Default to 1 slide per view for mobile and smaller viewports
   slidesPerGroup: 1,
-  spaceBetween: "20rem",
+  spaceBetween: "120rem",
   loop: false,
   centeredSlides: false,
   // Define breakpoints
