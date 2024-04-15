@@ -277,9 +277,8 @@ const swiper3 = new Swiper(".is--gallery-slider", {
   loop: false,
   centeredSlides: false,
   effect: "cards",
+  grabCursor: true,
   cardsEffect: {
-    grabCursor: true,
-    perSlideOffset: "115rem",
     rotate: false,
   },
 
