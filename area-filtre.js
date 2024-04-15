@@ -1,20 +1,24 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Get the value from the <h1> element
-  var h1Value = document.querySelector("h1").textContent.trim();
+  // Collect all partner-related-text values into an array
+  var relatedTexts = Array.from(
+    document.querySelectorAll(".partner-related-text")
+  ).map(function (elem) {
+    return elem.textContent.trim();
+  });
 
   // Get all partner--item elements
-  var items = Array.from(document.querySelectorAll(".partner--item"));
+  var partnerItems = Array.from(document.querySelectorAll(".partner--item"));
 
-  // Filter items to match the partner--area with h1Value and take the last 3
-  var matchedItems = items
+  // Filter partner--items to find those where heading-32 matches any relatedText
+  var matchedItems = partnerItems
     .filter(function (item) {
-      var areaValue = item.querySelector(".partner--area").textContent.trim();
-      return areaValue === h1Value;
+      var headingText = item.querySelector(".heading-32").textContent.trim();
+      return relatedTexts.includes(headingText);
     })
-    .slice(-3); // Get only the last 3 matching elements
+    .slice(0, 3); // Get only the first 3 matching elements
 
-  // Hide all items first
-  items.forEach(function (item) {
+  // Hide all partner--items initially
+  partnerItems.forEach(function (item) {
     item.style.display = "none";
   });
 
