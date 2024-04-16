@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
       var areaValue = item.querySelector(".partner--area").textContent.trim();
       return areaValue.includes(h1Value);
     })
-    .slice(-3); // Note: Use slice(-3) to get the last 3 matching elements
+    .slice(0, 3); // Note: Use slice(-3) to get the last 3 matching elements
 
   // Hide all items initially
   items.forEach(function (item) {
