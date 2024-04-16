@@ -2,18 +2,18 @@ document.addEventListener("DOMContentLoaded", function () {
   // Get the value from the <h1> element
   var h1Value = document.querySelector("h1").textContent.trim();
 
-  // Get all partner--item elements
+  // Get all elements with the class 'partner--item'
   var items = Array.from(document.querySelectorAll(".partner--item"));
 
-  // Filter items to match the partner--area with h1Value and take the last 3
+  // Filter items where the 'partner--area' text includes the 'h1Value' and select only the first 3
   var matchedItems = items
     .filter(function (item) {
       var areaValue = item.querySelector(".partner--area").textContent.trim();
-      return areaValue === h1Value;
+      return areaValue.includes(h1Value);
     })
-    .slice(0, 3); // Get only the last 3 matching elements
+    .slice(-3); // Note: Use slice(-3) to get the last 3 matching elements
 
-  // Hide all items first
+  // Hide all items initially
   items.forEach(function (item) {
     item.style.display = "none";
   });
