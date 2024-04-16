@@ -111,7 +111,7 @@
   width: 52rem;
   height: 52rem;
   margin-bottom: 20rem;
-  overflow: revert;
+  overflow: revert !important;
   aspect-ratio: 1 / 1;
   height: 100%;
 }
