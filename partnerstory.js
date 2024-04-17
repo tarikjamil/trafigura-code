@@ -213,6 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
   populateRegionFilter();
   populateFilter("areaFilter", ".partner--area", false);
   populateFilter("stateFilter", ".partner--state", false);
+  filterItems();
 
   function setPartnerContinents() {
     document.querySelectorAll(".partner--item").forEach((item) => {
