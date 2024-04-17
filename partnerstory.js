@@ -324,6 +324,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectedState = document.querySelector(
       'input[name="stateFilter"]:checked'
     )?.value;
+
+    let isFirstVisible = true; // Flag to find the first visible item
     document.querySelectorAll(".partner--item").forEach((item) => {
       const regionOrContinentMatch =
         !selectedRegion ||
@@ -341,8 +343,15 @@ document.addEventListener("DOMContentLoaded", function () {
         item
           .querySelector(".partner--state")
           .textContent.includes(selectedState);
-      item.style.display =
-        regionOrContinentMatch && areaMatch && stateMatch ? "" : "none";
+
+      const shouldDisplay = regionOrContinentMatch && areaMatch && stateMatch;
+      item.style.display = shouldDisplay ? "" : "none";
+      item.classList.remove("first-visible"); // Remove the class from all items initially
+
+      if (shouldDisplay && isFirstVisible) {
+        item.classList.add("first-visible"); // Add the class only to the first visible item
+        isFirstVisible = false; // Reset flag after the first visible item is found
+      }
     });
   }
 });
