@@ -31,7 +31,7 @@ function pageLoad() {
 
 pageLoad();
 
-// ------------------ heading ------------------ //
+// ------------------ animations on page ------------------ //
 gsap.to(".portfolio--row:nth-child(2)", {
   x: "20vw", // Target scale
   scrollTrigger: {
@@ -56,6 +56,74 @@ document.querySelectorAll("[animation=fade]").forEach(function (fadeSplitElem) {
   });
 });
 
+document
+  .querySelectorAll("[animation=fadefromleft]")
+  .forEach(function (fadeSplitElem) {
+    gsap.from(fadeSplitElem, {
+      scrollTrigger: {
+        trigger: fadeSplitElem,
+        start: "top bottom-=50",
+        markers: false,
+      },
+      x: "-20rem",
+      opacity: 0,
+      ease: "smooth",
+      duration: 0.6,
+    });
+  });
+
+document
+  .querySelectorAll("[animation=fadefromright]")
+  .forEach(function (fadeSplitElem) {
+    gsap.from(fadeSplitElem, {
+      scrollTrigger: {
+        trigger: fadeSplitElem,
+        start: "top bottom-=50",
+        markers: false,
+      },
+      x: "20rem",
+      opacity: 0,
+      ease: "smooth",
+      duration: 0.6,
+    });
+  });
+
+document.querySelectorAll('[animation="parallax-parent"]').forEach((parent) => {
+  const top = parent.querySelector('[animation="parallax-top"]');
+  const bottom = parent.querySelector('[animation="parallax-bottom"]');
+
+  gsap.fromTo(
+    top,
+    {
+      y: "-20%",
+    },
+    {
+      y: "20%",
+      scrollTrigger: {
+        trigger: parent,
+        start: "top bottom", // when the top of the parent hits the bottom of the viewport
+        end: "bottom top", // when the bottom of the parent leaves the top of the viewport
+        scrub: true,
+      },
+    }
+  );
+
+  gsap.fromTo(
+    bottom,
+    {
+      y: "20%",
+    },
+    {
+      y: "-20%",
+      scrollTrigger: {
+        trigger: parent,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true,
+      },
+    }
+  );
+});
 // ------------------ navbar - accordion ------------------ //
 
 jQuery(document).ready(function ($) {
