@@ -241,6 +241,77 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// ------------------ date format ------------------ //
+
+document.addEventListener("DOMContentLoaded", (event) => {
+  // Function to format the date into "DD Month YYYY"
+  function formatDate(d) {
+    if (isNaN(d.getTime())) {
+      // Check if the date object is valid
+      console.error("Invalid Date created from input:", d);
+      return "Invalid date"; // Handle invalid dates
+    }
+
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return `${("0" + d.getDate()).slice(-2)} ${
+      months[d.getMonth()]
+    } ${d.getFullYear()}`;
+  }
+
+  // Find all elements with the class 'text-date'
+  const dateElements = document.querySelectorAll(".text-date");
+
+  dateElements.forEach((element) => {
+    const rawDate = element.textContent.trim();
+    console.log("Original date text:", rawDate); // Debugging output
+    // Parse the date assuming the format "M/DD/YYYY"
+    const dateParts = rawDate.split("/");
+    if (dateParts.length !== 3) {
+      console.error("Incorrect date format:", rawDate);
+      element.textContent = "Incorrect date format"; // Error handling
+      return;
+    }
+    // Create a new Date object from the parsed components
+    const dateObject = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+    element.textContent = formatDate(dateObject);
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  let dateElements = document.querySelectorAll(".text-14.is--date");
+
+  dateElements.forEach(function (elem) {
+    const rawDate = elem.textContent.trim();
+    console.log("Current date text for .text-14.is--date:", rawDate); // Debugging output
+    const dateComponents = rawDate.split("/");
+    if (dateComponents.length !== 3) {
+      console.error("Incorrect date format in .text-14.is--date:", rawDate);
+      elem.textContent = "Incorrect date format"; // Error handling
+      return;
+    }
+    const dateObject = new Date(
+      dateComponents[2],
+      dateComponents[0] - 1,
+      dateComponents[1]
+    );
+    let formattedDate = formatDate(dateObject);
+    elem.textContent = formattedDate; // Display the formatted date
+  });
+});
+
 // ------------------ tags color change ------------------ //
 //
 // $(document).ready(function () {
