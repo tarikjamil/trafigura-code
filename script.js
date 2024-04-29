@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", (event) => {
   // Function to format the date
   function formatDate(d) {
-    const months = [
+    let months = [
       "January",
       "February",
       "March",
@@ -265,13 +265,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
   }
 
   // Find all elements with the class 'text-date'
-  const dateElements = document.querySelectorAll(".text-date");
+  let dateElements = document.querySelectorAll(".text-date");
 
   dateElements.forEach((element) => {
     // Assuming the date is in 'YYYY-MM-DD HH:MM:SS' format
-    const dateParts = element.textContent.trim().split(/[- :]/);
+    let dateParts = element.textContent.trim().split(/[- :]/);
     // Adjust month (-1) because months are 0-indexed in JavaScript Date objects
-    const dateObject = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+    let dateObject = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
 
     // Update the text content of the element with the formatted date
     element.textContent = formatDate(dateObject);
