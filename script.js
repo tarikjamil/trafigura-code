@@ -245,7 +245,9 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", (event) => {
   // Function to format the date
   function formatDate(d) {
-    let months = [
+    if (isNaN(d)) return "Invalid date"; // Check if the date is valid
+
+    const months = [
       "January",
       "February",
       "March",
@@ -265,33 +267,33 @@ document.addEventListener("DOMContentLoaded", (event) => {
   }
 
   // Find all elements with the class 'text-date'
-  let dateElements = document.querySelectorAll(".text-date");
+  const dateElements = document.querySelectorAll(".text-date");
 
   dateElements.forEach((element) => {
-    // Assuming the date is in 'YYYY-MM-DD HH:MM:SS' format
-    let dateParts = element.textContent.trim().split(/[- :]/);
-    // Adjust month (-1) because months are 0-indexed in JavaScript Date objects
-    let dateObject = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-
-    // Update the text content of the element with the formatted date
+    console.log("Original date text:", element.textContent); // Debug log
+    const dateParts = element.textContent.trim().split(/[- :]/);
+    if (dateParts.length < 3) {
+      console.error("Date format error:", element.textContent);
+      return; // Skip this element if the date format is incorrect
+    }
+    const dateObject = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
     element.textContent = formatDate(dateObject);
   });
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Select all elements with the class "text-14 is--date"
   let dateElements = document.querySelectorAll(".text-14.is--date");
 
   dateElements.forEach(function (elem) {
-    // Get the current text, which is the date
     let currentText = elem.textContent.trim();
-    // Split the date by spaces to separate the date from the time, if any
+    console.log("Current date text for .text-14.is--date:", currentText); // Debug log
     let datePart = currentText.split(" ")[0];
-    // Split the date into components [YYYY, MM, DD]
     let dateComponents = datePart.split("-");
-    // Reformat the date to "DD.MM.YYYY"
+    if (dateComponents.length < 3) {
+      console.error("Date format error in .text-14.is--date:", currentText);
+      return; // Skip this element if the date format is incorrect
+    }
     let formattedDate = `${dateComponents[2]}.${dateComponents[1]}.${dateComponents[0]}`;
-    // Update the text in the element
     elem.textContent = formattedDate;
   });
 });
