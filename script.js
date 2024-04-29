@@ -245,7 +245,11 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", (event) => {
   // Function to format the date
   function formatDate(d) {
-    if (isNaN(d)) return "Invalid date"; // Check if the date is valid
+    if (isNaN(d.getTime())) {
+      // Check if the date object is valid
+      console.error("Invalid Date:", d);
+      return "Invalid date"; // Handle invalid dates
+    }
 
     const months = [
       "January",
@@ -270,12 +274,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const dateElements = document.querySelectorAll(".text-date");
 
   dateElements.forEach((element) => {
-    console.log("Original date text:", element.textContent); // Debug log
-    const dateParts = element.textContent.trim().split(/[- :]/);
+    const rawDate = element.textContent.trim();
+    console.log("Processing date:", rawDate); // Debugging output
+    const dateParts = rawDate.split(/[- :]/);
     if (dateParts.length < 3) {
-      console.error("Date format error:", element.textContent);
-      return; // Skip this element if the date format is incorrect
+      console.error("Incorrect date format:", rawDate);
+      element.textContent = "Incorrect date format"; // Error handling
+      return;
     }
+    // Create a new Date object from the parsed components
     const dateObject = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
     element.textContent = formatDate(dateObject);
   });
@@ -285,16 +292,21 @@ document.addEventListener("DOMContentLoaded", function () {
   let dateElements = document.querySelectorAll(".text-14.is--date");
 
   dateElements.forEach(function (elem) {
-    let currentText = elem.textContent.trim();
-    console.log("Current date text for .text-14.is--date:", currentText); // Debug log
-    let datePart = currentText.split(" ")[0];
-    let dateComponents = datePart.split("-");
-    if (dateComponents.length < 3) {
-      console.error("Date format error in .text-14.is--date:", currentText);
-      return; // Skip this element if the date format is incorrect
+    const rawDate = elem.textContent.trim();
+    console.log("Current date text for .text-14.is--date:", rawDate); // Debugging output
+    const dateComponents = rawDate.split(" ")[0].split("-");
+    if (dateComponents.length !== 3) {
+      console.error("Incorrect date format in .text-14.is--date:", rawDate);
+      elem.textContent = "Incorrect date format"; // Error handling
+      return;
     }
-    let formattedDate = `${dateComponents[2]}.${dateComponents[1]}.${dateComponents[0]}`;
-    elem.textContent = formattedDate;
+    const dateObject = new Date(
+      dateComponents[0],
+      dateComponents[1] - 1,
+      dateComponents[2]
+    );
+    let formattedDate = formatDate(dateObject);
+    elem.textContent = formattedDate; // Display the formatted date
   });
 });
 
