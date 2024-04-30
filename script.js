@@ -290,28 +290,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
   });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  let dateElements = document.querySelectorAll(".text-14.is--date");
-
-  dateElements.forEach(function (elem) {
-    const rawDate = elem.textContent.trim();
-    console.log("Current date text for .text-14.is--date:", rawDate); // Debugging output
-    const dateComponents = rawDate.split("/");
-    if (dateComponents.length !== 3) {
-      console.error("Incorrect date format in .text-14.is--date:", rawDate);
-      elem.textContent = "Incorrect date format"; // Error handling
-      return;
-    }
-    const dateObject = new Date(
-      dateComponents[2],
-      dateComponents[0] - 1,
-      dateComponents[1]
-    );
-    let formattedDate = formatDate(dateObject);
-    elem.textContent = formattedDate; // Display the formatted date
-  });
-});
-
 // ------------------ tags color change ------------------ //
 //
 // $(document).ready(function () {
