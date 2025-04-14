@@ -39,32 +39,34 @@ document.addEventListener("DOMContentLoaded", function () {
     const sections = document.querySelectorAll(selector);
 
     sections.forEach((section) => {
-      const newContent = [];
       const children = Array.from(section.children);
+      const newContent = [];
+
       let i = 0;
-
       while (i < children.length) {
-        const el = children[i];
+        const current = children[i];
 
-        if (el.tagName === "H3") {
-          const row = document.createElement("div");
-          row.classList.add(rowClass);
+        if (current.tagName === "H3") {
+          const wrapper = document.createElement("div");
+          wrapper.classList.add(rowClass);
 
-          row.appendChild(el.cloneNode(true));
+          // Move <h3> into wrapper
+          wrapper.appendChild(current);
           i++;
 
+          // Move following <p> elements
           while (i < children.length && children[i].tagName === "P") {
-            row.appendChild(children[i].cloneNode(true));
+            wrapper.appendChild(children[i]);
             i++;
           }
 
-          newContent.push(row);
+          newContent.push(wrapper);
         } else {
           i++;
         }
       }
 
-      // Replace content
+      // Clear section and append rebuilt content
       section.innerHTML = "";
       newContent.forEach((row) => section.appendChild(row));
     });
