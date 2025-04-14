@@ -30,45 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
 // -------------- impact -------------- //
 
 document.addEventListener("DOMContentLoaded", function () {
-  const impactSections = document.querySelectorAll(".tale--impact-content");
-
-  impactSections.forEach((section) => {
-    const newContent = [];
-    const children = Array.from(section.children);
-    let i = 0;
-
-    while (i < children.length) {
-      const el = children[i];
-
-      if (el.tagName === "H3") {
-        const row = document.createElement("div");
-        row.classList.add("tale--impact-row");
-
-        // Move <h3>
-        row.appendChild(el.cloneNode(true));
-        i++;
-
-        // Move all following <p> tags
-        while (i < children.length && children[i].tagName === "P") {
-          row.appendChild(children[i].cloneNode(true));
-          i++;
-        }
-
-        newContent.push(row);
-      } else {
-        i++;
-      }
-    }
-
-    // Replace old content
-    section.innerHTML = "";
-    newContent.forEach((row) => section.appendChild(row));
-  });
-});
-
-// -------------- pillars -------------- //
-
-document.addEventListener("DOMContentLoaded", function () {
   const groups = [
     { selector: ".tale--impact-content", rowClass: "tale--impact-row" },
     { selector: ".richtext--core-pillars", rowClass: "tale--pillar-row" },
