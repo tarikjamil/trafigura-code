@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const swiper = new Swiper(".swiper", {
     slidesPerView: 1,
+    spaceBetween: "20rem",
     loop: true,
     on: {
       init: function () {
