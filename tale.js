@@ -33,31 +33,35 @@ document.addEventListener("DOMContentLoaded", function () {
   const impactSections = document.querySelectorAll(".tale--impact-content");
 
   impactSections.forEach((section) => {
+    const newContent = [];
     const children = Array.from(section.children);
     let i = 0;
 
     while (i < children.length) {
-      if (children[i].tagName === "H3") {
-        const rowDiv = document.createElement("div");
-        rowDiv.classList.add("tale--impact-row");
+      const el = children[i];
 
-        // Move the <h3> inside
-        rowDiv.appendChild(children[i]);
+      if (el.tagName === "H3") {
+        const row = document.createElement("div");
+        row.classList.add("tale--impact-row");
 
+        // Move <h3>
+        row.appendChild(el.cloneNode(true));
         i++;
 
-        // Move all following <p> tags until next <h3> or end
+        // Move all following <p> tags
         while (i < children.length && children[i].tagName === "P") {
-          rowDiv.appendChild(children[i]);
+          row.appendChild(children[i].cloneNode(true));
           i++;
         }
 
-        // Insert the new group before the first moved element
-        section.insertBefore(rowDiv, rowDiv.firstChild);
-        section.appendChild(rowDiv);
+        newContent.push(row);
       } else {
         i++;
       }
     }
+
+    // Replace old content
+    section.innerHTML = "";
+    newContent.forEach((row) => section.appendChild(row));
   });
 });
