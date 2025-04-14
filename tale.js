@@ -26,3 +26,38 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+// -------------- impact -------------- //
+
+document.addEventListener("DOMContentLoaded", function () {
+  const impactSections = document.querySelectorAll(".tale--impact-content");
+
+  impactSections.forEach((section) => {
+    const children = Array.from(section.children);
+    let i = 0;
+
+    while (i < children.length) {
+      if (children[i].tagName === "H3") {
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("tale--impact-row");
+
+        // Move the <h3> inside
+        rowDiv.appendChild(children[i]);
+
+        i++;
+
+        // Move all following <p> tags until next <h3> or end
+        while (i < children.length && children[i].tagName === "P") {
+          rowDiv.appendChild(children[i]);
+          i++;
+        }
+
+        // Insert the new group before the first moved element
+        section.insertBefore(rowDiv, rowDiv.firstChild);
+        section.appendChild(rowDiv);
+      } else {
+        i++;
+      }
+    }
+  });
+});
