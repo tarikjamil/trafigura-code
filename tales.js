@@ -27,6 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
         slidesPerView: 1,
         spaceBetween: 20,
         loop: true,
+        lazyPreloadPrevNext: 3,
+        loopAdditionalSlides: 1,
 
         on: {
           init: function () {
