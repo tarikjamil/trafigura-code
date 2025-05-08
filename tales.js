@@ -10,8 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateActiveMotif(index) {
     const motifs = document.querySelectorAll(".bg--motif");
     const realSlidesCount = motifs.length;
-    const realIndex = index % realSlidesCount; // ensure correct motif in loop mode
-
+    const realIndex = index % realSlidesCount;
     motifs.forEach((motif, i) => {
       motif.classList.toggle("is--active", i === realIndex);
     });
@@ -24,25 +23,26 @@ document.addEventListener("DOMContentLoaded", function () {
       observer.disconnect();
 
       swiper = new Swiper(".swiper", {
-        slidesPerView: 1,
+        slidesPerView: "auto",
         spaceBetween: 20,
         loop: true,
         lazyPreloadPrevNext: 3,
-        loopAdditionalSlides: 1,
-        loopedSlides: swiperEl.querySelectorAll(".swiper-slide").length, // Adjust to the number of slides available
+        centeredSlides: false,
+        watchSlidesProgress: true,
+
         on: {
           init: function () {
             updateHeroVideo(this.slides[this.activeIndex]);
-            updateActiveMotif(this.realIndex); // instant on load
+            updateActiveMotif(this.realIndex);
           },
           slideChange: function () {
-            updateActiveMotif(this.realIndex); // instant motif update
+            updateActiveMotif(this.realIndex);
           },
           slideChangeTransitionStart: function () {
-            fadeOutVideo(); // optional: fade video during slide
+            fadeOutVideo();
           },
           slideChangeTransitionEnd: function () {
-            updateHeroVideo(this.slides[this.activeIndex]); // update video after slide
+            updateHeroVideo(this.slides[this.activeIndex]);
           },
         },
       });
@@ -66,20 +66,18 @@ document.addEventListener("DOMContentLoaded", function () {
     "click",
     () => {
       if (video.paused) {
-        video.play().catch((err) => {
-          console.warn("Autoplay failed after user click:", err);
-        });
+        video
+          .play()
+          .catch((err) =>
+            console.warn("Autoplay failed after user click:", err)
+          );
       }
     },
     { once: true }
   );
 
-  // Try autoplay anyway
-  video.play().catch((err) => {
-    console.warn("Initial autoplay failed:", err);
-  });
+  video.play().catch((err) => console.warn("Initial autoplay failed:", err));
 
-  // Play/Pause toggle
   playBtn?.addEventListener("click", () => {
     if (video.paused) {
       video.play();
@@ -98,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateHeroVideo(activeSlide) {
     const videoDiv = activeSlide.querySelector(".tales--video-swiper");
     if (!videoDiv) return;
-
     const videoUrl = videoDiv.textContent.trim();
     if (!videoUrl) return;
 
