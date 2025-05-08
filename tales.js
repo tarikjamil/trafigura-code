@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       console.log(
-        "Duplicate slides now:",
+        "Duplicate slides now2:",
         document.querySelectorAll(".swiper-slide-duplicate").length
       );
     }, 300); // adjust timeout if needed
