@@ -5,11 +5,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const arrows = document.querySelectorAll(".tales--arrow");
 
   let isVideoPlaying = true;
+  let swiper; // declare globally
 
-  function initSwiperIfReady() {
+  // Observer to wait until CMS content is fully loaded
+  const observer = new MutationObserver(() => {
     const slides = document.querySelectorAll(".swiper-slide");
-    if (slides.length >= 3) {
-      const swiper = new Swiper(".swiper", {
+    if (slides.length >= 3 && !swiper) {
+      observer.disconnect(); // only once
+
+      // Initialize Swiper
+      swiper = new Swiper(".swiper", {
         slidesPerView: 1,
         spaceBetween: 20,
         loop: true,
@@ -37,39 +42,32 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".swiper-slide-duplicate").length
       );
     }
-  }
-
-  const observer = new MutationObserver(() => {
-    const slides = document.querySelectorAll(".swiper-slide");
-    if (slides.length >= 3) {
-      observer.disconnect();
-      initSwiperIfReady();
-    }
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
 
-  const heroVideo = document.getElementById("hero-video");
-
+  // Autoplay fix: user interaction first
   document.addEventListener(
     "click",
     () => {
-      if (heroVideo.paused) {
-        heroVideo.play().catch((err) => {
+      if (video.paused) {
+        video.play().catch((err) => {
           console.warn("Autoplay failed after user click:", err);
         });
       }
     },
     { once: true }
-  ); // only need one interaction
+  );
 
-  heroVideo.play().catch((err) => {
+  // Try autoplay anyway (might fail silently)
+  video.play().catch((err) => {
     console.warn("Initial autoplay failed:", err);
   });
 
   // Arrows
   arrows.forEach((arrow) => {
     arrow.addEventListener("click", () => {
+      if (!swiper) return;
       const dir = arrow.getAttribute("data-dir");
       if (dir === "next") swiper.slideNext();
       else swiper.slidePrev();
