@@ -6,8 +6,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let isVideoPlaying = true;
 
-  window.addEventListener("load", function () {
-    setTimeout(() => {
+  function initSwiperIfReady() {
+    const slides = document.querySelectorAll(".swiper-slide");
+    if (slides.length >= 3) {
       const swiper = new Swiper(".swiper", {
         slidesPerView: 1,
         spaceBetween: 20,
@@ -32,11 +33,21 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       console.log(
-        "Duplicate slides now2:",
+        "Duplicate slides now:",
         document.querySelectorAll(".swiper-slide-duplicate").length
       );
-    }, 300); // adjust timeout if needed
+    }
+  }
+
+  const observer = new MutationObserver(() => {
+    const slides = document.querySelectorAll(".swiper-slide");
+    if (slides.length >= 3) {
+      observer.disconnect();
+      initSwiperIfReady();
+    }
   });
+
+  observer.observe(document.body, { childList: true, subtree: true });
 
   // Arrows
   arrows.forEach((arrow) => {
