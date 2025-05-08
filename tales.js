@@ -107,3 +107,28 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 });
+
+// ---------------- motif.js ---------------- //
+
+document.addEventListener("DOMContentLoaded", function () {
+  const swiper = new Swiper(".swiper", {
+    slidesPerView: 1,
+    spaceBetween: 20,
+    loop: false, // Important: set to false so indexes match .bg--motif
+    on: {
+      init: function () {
+        updateActiveMotif(this.realIndex);
+      },
+      slideChange: function () {
+        updateActiveMotif(this.realIndex);
+      },
+    },
+  });
+
+  function updateActiveMotif(index) {
+    const motifs = document.querySelectorAll(".bg--motif");
+    motifs.forEach((motif, i) => {
+      motif.classList.toggle("is--active", i === index);
+    });
+  }
+});
