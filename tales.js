@@ -6,22 +6,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let isVideoPlaying = true;
 
-  const swiper = new Swiper(".swiper", {
-    slidesPerView: 1,
-    spaceBetween: 20, // must be a number
-    loop: true,
+  window.addEventListener("load", function () {
+    const swiper = new Swiper(".swiper", {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      loop: true,
 
-    on: {
-      init: function () {
-        updateHeroVideo(this.slides[this.activeIndex]);
+      on: {
+        init: function () {
+          updateHeroVideo(this.slides[this.activeIndex]);
+        },
+        slideChangeTransitionStart: function () {
+          fadeOutVideo();
+        },
+        slideChangeTransitionEnd: function () {
+          updateHeroVideo(this.slides[this.activeIndex]);
+        },
       },
-      slideChangeTransitionStart: function () {
-        fadeOutVideo();
-      },
-      slideChangeTransitionEnd: function () {
-        updateHeroVideo(this.slides[this.activeIndex]);
-      },
-    },
+    });
   });
 
   // Arrows
