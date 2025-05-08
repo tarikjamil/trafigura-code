@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
     slidesPerView: 1,
     spaceBetween: "20rem",
     loop: true,
-    loopAdditionalSlides: 1, // Add extra slides for smoother looping
+    loopedSlides: 3, // Force number of slides to duplicate
+    loopAdditionalSlides: 3, // Extra copies to smooth transition
 
     on: {
       init: function () {
