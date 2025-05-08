@@ -3,17 +3,26 @@ document.addEventListener("DOMContentLoaded", function () {
   const videoSource = video.querySelector("source");
   const playBtn = document.querySelector(".tales--play");
   const arrows = document.querySelectorAll(".tales--arrow");
-
   let isVideoPlaying = true;
-  let swiper; // declare globally
+  let swiper;
+
+  // Background motif updater
+  function updateActiveMotif(index) {
+    const motifs = document.querySelectorAll(".bg--motif");
+    const realSlidesCount = motifs.length;
+    const realIndex = index % realSlidesCount; // ensure correct motif in loop mode
+
+    motifs.forEach((motif, i) => {
+      motif.classList.toggle("is--active", i === realIndex);
+    });
+  }
 
   // Observer to wait until CMS content is fully loaded
   const observer = new MutationObserver(() => {
     const slides = document.querySelectorAll(".swiper-slide");
     if (slides.length >= 3 && !swiper) {
-      observer.disconnect(); // only once
+      observer.disconnect();
 
-      // Initialize Swiper
       swiper = new Swiper(".swiper", {
         slidesPerView: 1,
         spaceBetween: 20,
@@ -21,32 +30,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
         on: {
           init: function () {
-            console.log(
-              "Swiper initialized with",
-              this.slides.length,
-              "slides"
-            );
             updateHeroVideo(this.slides[this.activeIndex]);
+            updateActiveMotif(this.realIndex);
           },
           slideChangeTransitionStart: function () {
             fadeOutVideo();
           },
           slideChangeTransitionEnd: function () {
             updateHeroVideo(this.slides[this.activeIndex]);
+            updateActiveMotif(this.realIndex);
           },
         },
       });
-
-      console.log(
-        "Duplicate slides now:",
-        document.querySelectorAll(".swiper-slide-duplicate").length
-      );
     }
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
 
-  // Autoplay fix: user interaction first
+  // Arrows
+  arrows.forEach((arrow) => {
+    arrow.addEventListener("click", () => {
+      if (!swiper) return;
+      const dir = arrow.getAttribute("data-dir");
+      if (dir === "next") swiper.slideNext();
+      else swiper.slidePrev();
+    });
+  });
+
+  // Video autoplay fix
   document.addEventListener(
     "click",
     () => {
@@ -59,23 +70,13 @@ document.addEventListener("DOMContentLoaded", function () {
     { once: true }
   );
 
-  // Try autoplay anyway (might fail silently)
+  // Try autoplay anyway
   video.play().catch((err) => {
     console.warn("Initial autoplay failed:", err);
   });
 
-  // Arrows
-  arrows.forEach((arrow) => {
-    arrow.addEventListener("click", () => {
-      if (!swiper) return;
-      const dir = arrow.getAttribute("data-dir");
-      if (dir === "next") swiper.slideNext();
-      else swiper.slidePrev();
-    });
-  });
-
   // Play/Pause toggle
-  playBtn.addEventListener("click", () => {
+  playBtn?.addEventListener("click", () => {
     if (video.paused) {
       video.play();
       isVideoPlaying = true;
@@ -105,30 +106,5 @@ document.addEventListener("DOMContentLoaded", function () {
       video.muted = false;
       if (isVideoPlaying) video.play();
     };
-  }
-});
-
-// ---------------- motif.js ---------------- //
-
-document.addEventListener("DOMContentLoaded", function () {
-  const swiper = new Swiper(".swiper", {
-    slidesPerView: 1,
-    spaceBetween: 20,
-    loop: false, // Important: set to false so indexes match .bg--motif
-    on: {
-      init: function () {
-        updateActiveMotif(this.realIndex);
-      },
-      slideChange: function () {
-        updateActiveMotif(this.realIndex);
-      },
-    },
-  });
-
-  function updateActiveMotif(index) {
-    const motifs = document.querySelectorAll(".bg--motif");
-    motifs.forEach((motif, i) => {
-      motif.classList.toggle("is--active", i === index);
-    });
   }
 });
