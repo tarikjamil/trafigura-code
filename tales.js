@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
     slidesPerView: 1,
     spaceBetween: "20rem",
     loop: true,
+    loopAdditionalSlides: 1, // Add extra slides for smoother looping
+
     on: {
       init: function () {
         updateHeroVideo(this.slides[this.activeIndex]);
