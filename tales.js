@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
         slidesPerView: 1,
         spaceBetween: 20,
         loop: true,
-        loopedSlides: 3, // Set number of looped slides (should match real slides count)
 
         on: {
           init: function () {
