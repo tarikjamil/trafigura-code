@@ -8,10 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const swiper = new Swiper(".swiper", {
     slidesPerView: 1,
-    spaceBetween: "20rem",
+    spaceBetween: 20, // must be a number
     loop: true,
-    loopedSlides: 3, // Force number of slides to duplicate
-    loopAdditionalSlides: 3, // Extra copies to smooth transition
 
     on: {
       init: function () {
