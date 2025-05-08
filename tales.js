@@ -7,17 +7,35 @@ document.addEventListener("DOMContentLoaded", function () {
   let isVideoPlaying = true;
 
   window.addEventListener("load", function () {
-    const swiper = new Swiper(".swiper", {
-      slidesPerView: 1,
-      spaceBetween: 20,
-      loop: true,
-    });
+    setTimeout(() => {
+      const swiper = new Swiper(".swiper", {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
 
-    console.log("Slides total:", swiper.slides.length);
-    console.log(
-      "Duplicate slides:",
-      document.querySelectorAll(".swiper-slide-duplicate").length
-    );
+        on: {
+          init: function () {
+            console.log(
+              "Swiper initialized with",
+              this.slides.length,
+              "slides"
+            );
+            updateHeroVideo(this.slides[this.activeIndex]);
+          },
+          slideChangeTransitionStart: function () {
+            fadeOutVideo();
+          },
+          slideChangeTransitionEnd: function () {
+            updateHeroVideo(this.slides[this.activeIndex]);
+          },
+        },
+      });
+
+      console.log(
+        "Duplicate slides now:",
+        document.querySelectorAll(".swiper-slide-duplicate").length
+      );
+    }, 300); // adjust timeout if needed
   });
 
   // Arrows
