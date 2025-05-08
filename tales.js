@@ -11,19 +11,13 @@ document.addEventListener("DOMContentLoaded", function () {
       slidesPerView: 1,
       spaceBetween: 20,
       loop: true,
-
-      on: {
-        init: function () {
-          updateHeroVideo(this.slides[this.activeIndex]);
-        },
-        slideChangeTransitionStart: function () {
-          fadeOutVideo();
-        },
-        slideChangeTransitionEnd: function () {
-          updateHeroVideo(this.slides[this.activeIndex]);
-        },
-      },
     });
+
+    console.log("Slides total:", swiper.slides.length);
+    console.log(
+      "Duplicate slides:",
+      document.querySelectorAll(".swiper-slide-duplicate").length
+    );
   });
 
   // Arrows
