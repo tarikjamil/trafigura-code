@@ -49,6 +49,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   observer.observe(document.body, { childList: true, subtree: true });
 
+  const heroVideo = document.getElementById("hero-video");
+
+  document.addEventListener(
+    "click",
+    () => {
+      if (heroVideo.paused) {
+        heroVideo.play().catch((err) => {
+          console.warn("Autoplay failed after user click:", err);
+        });
+      }
+    },
+    { once: true }
+  ); // only need one interaction
+
+  heroVideo.play().catch((err) => {
+    console.warn("Initial autoplay failed:", err);
+  });
+
   // Arrows
   arrows.forEach((arrow) => {
     arrow.addEventListener("click", () => {
