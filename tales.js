@@ -31,14 +31,16 @@ document.addEventListener("DOMContentLoaded", function () {
         on: {
           init: function () {
             updateHeroVideo(this.slides[this.activeIndex]);
-            updateActiveMotif(this.realIndex);
+            updateActiveMotif(this.realIndex); // instant on load
+          },
+          slideChange: function () {
+            updateActiveMotif(this.realIndex); // instant motif update
           },
           slideChangeTransitionStart: function () {
-            fadeOutVideo();
+            fadeOutVideo(); // optional: fade video during slide
           },
           slideChangeTransitionEnd: function () {
-            updateHeroVideo(this.slides[this.activeIndex]);
-            updateActiveMotif(this.realIndex);
+            updateHeroVideo(this.slides[this.activeIndex]); // update video after slide
           },
         },
       });
