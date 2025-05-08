@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const videoSource = heroVideo.querySelector("source");
   const videoWrapper = document.querySelector(".tales--video-swiper");
   const playButton = document.querySelector(".tales--play");
+  const playIcon = document.querySelector(".tales--play-play");
+  const pauseIcon = document.querySelector(".tales--play-pause");
 
   // 1. Set the video source from the .tales--video-swiper div
   if (videoWrapper && videoSource) {
@@ -17,14 +19,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 3. Add play/pause toggle functionality
+  // 3. Toggle icons based on video state
+  function updateIcons() {
+    if (heroVideo.paused) {
+      playIcon.style.display = "block";
+      pauseIcon.style.display = "none";
+    } else {
+      playIcon.style.display = "none";
+      pauseIcon.style.display = "block";
+    }
+  }
+
+  // 4. Add play/pause toggle functionality
   playButton?.addEventListener("click", function () {
     if (heroVideo.paused) {
       heroVideo.play();
     } else {
       heroVideo.pause();
     }
+    updateIcons();
   });
+
+  // 5. Update icons when play/pause happens via other methods
+  heroVideo.addEventListener("play", updateIcons);
+  heroVideo.addEventListener("pause", updateIcons);
 });
 
 // -------------- impact -------------- //
