@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
         loop: true,
         lazyPreloadPrevNext: 3,
         loopAdditionalSlides: 1,
-
+        loopedSlides: swiperEl.querySelectorAll(".swiper-slide").length, // Adjust to the number of slides available
         on: {
           init: function () {
             updateHeroVideo(this.slides[this.activeIndex]);
