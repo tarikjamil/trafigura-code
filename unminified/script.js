@@ -57,6 +57,24 @@ document.querySelectorAll("[animation=fade]").forEach(function (fadeSplitElem) {
 });
 
 document
+  .querySelectorAll(
+    ".tale--impact-content *, .padding-tale-challenge *, .richtext--core-pillars *"
+  )
+  .forEach(function (fadeSplitElem) {
+    gsap.from(fadeSplitElem, {
+      scrollTrigger: {
+        trigger: fadeSplitElem,
+        start: "top bottom-=50",
+        markers: false,
+      },
+      y: "20rem",
+      opacity: 0,
+      ease: "smooth",
+      duration: 0.6,
+    });
+  });
+
+document
   .querySelectorAll("[animation=fadefromleft]")
   .forEach(function (fadeSplitElem) {
     gsap.from(fadeSplitElem, {
