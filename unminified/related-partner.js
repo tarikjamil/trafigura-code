@@ -1,9 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Helper function to normalize dashes for consistent matching
+  function normalizeDashes(str) {
+    return str.replace(/[-–—]/g, '-'); // Replace all dash types with regular hyphen
+  }
+
   // Collect all partner-related-text values into an array
   var relatedTexts = Array.from(
     document.querySelectorAll(".partner-related-text")
   ).map(function (elem) {
-    return elem.textContent.trim();
+    return normalizeDashes(elem.textContent.trim());
   });
 
   // Get all partner--item elements
@@ -12,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Filter partner--items to find those where heading-32 matches any relatedText
   var matchedItems = partnerItems
     .filter(function (item) {
-      var headingText = item.querySelector(".heading-32").textContent.trim();
+      var headingText = normalizeDashes(item.querySelector(".heading-32").textContent.trim());
       return relatedTexts.includes(headingText);
     })
     .slice(0, 3); // Get only the first 3 matching elements
