@@ -53,9 +53,10 @@ document.addEventListener("DOMContentLoaded", function () {
       // Check search match
       const searchMatch = !searchTerm || headingText.includes(searchTerm);
 
-      // Check category match
+      // Check category match (case-insensitive)
       const categoryMatch =
-        !selectedCategory || categoryText === selectedCategory;
+        !selectedCategory || 
+        categoryText.toLowerCase() === selectedCategory.toLowerCase();
 
       // Determine if item should be displayed
       const shouldDisplay = searchMatch && categoryMatch;
