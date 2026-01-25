@@ -22,6 +22,15 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .slice(0, 3); // Get only the first 3 matching elements
 
+  // If no matches found, hide the entire section
+  if (matchedItems.length === 0) {
+    var section = document.querySelector(".section.is--other-partners");
+    if (section) {
+      section.style.display = "none";
+    }
+    return;
+  }
+
   // Hide all partner--items initially
   partnerItems.forEach(function (item) {
     item.style.display = "none";
