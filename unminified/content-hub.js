@@ -1,8 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Get filter elements
-  const searchInput = document.querySelector('input[type="text"]');
+  // Get filter elements - use more specific selector for search input
+  const searchInput = document.querySelector('.filter--search-input, input[type="text"][placeholder*="Search"], input[type="text"][aria-label*="Search"]');
   const categoryFilter = document.querySelector(".filter--options");
   const resetButton = document.querySelector(".btn--reset");
+  
+  console.log("Content Hub Filter initialized");
+  console.log("Search input found:", searchInput);
+  console.log("Category filter found:", categoryFilter);
+  console.log("Reset button found:", resetButton);
   
   // Initialize filters
   filterItems();
@@ -11,6 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // Add event listeners
   if (searchInput) {
     searchInput.addEventListener("input", filterItems);
+    console.log("Search input event listener attached");
+  } else {
+    console.warn("Search input not found - searching will not work");
   }
 
   if (categoryFilter) {
@@ -39,8 +47,12 @@ document.addEventListener("DOMContentLoaded", function () {
       '.filter--options input[type="radio"]:checked'
     )?.value;
 
+    console.log("Filtering with:", { searchTerm, selectedCategory });
+
     // Get all content items - try multiple possible selectors
     const items = document.querySelectorAll(".hub-grid .w-dyn-item, .hub-grid > div, .hub-grid > a, .hub-grid .collection-item");
+
+    console.log("Found items:", items.length);
 
     let isFirstVisible = true;
 
