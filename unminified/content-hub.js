@@ -16,6 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
   if (categoryFilter) {
     categoryFilter.addEventListener("change", function (e) {
       if (e.target && e.target.matches('input[type="radio"]')) {
+        // Manually uncheck all other radio buttons (handles inconsistent name attributes)
+        const allRadios = document.querySelectorAll('.filter--options input[type="radio"]');
+        allRadios.forEach((radio) => {
+          if (radio !== e.target) {
+            radio.checked = false;
+          }
+        });
         filterItems();
       }
     });
@@ -121,6 +128,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Update text when option is selected
     options.addEventListener("change", function (e) {
       if (e.target && e.target.matches('input[type="radio"]')) {
+        // Manually uncheck all other radio buttons (handles inconsistent name attributes)
+        const allRadios = document.querySelectorAll('.filter--options input[type="radio"]');
+        allRadios.forEach((radio) => {
+          if (radio !== e.target) {
+            radio.checked = false;
+          }
+        });
         selectText.textContent = e.target.nextElementSibling.textContent;
         options.style.display = "none";
       }
