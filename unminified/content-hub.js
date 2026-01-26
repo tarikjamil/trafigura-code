@@ -54,9 +54,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("Found items:", items.length);
 
+    // Convert NodeList to Array and reverse the order (newest first)
+    const itemsArray = Array.from(items).reverse();
+
     let isFirstVisible = true;
 
-    items.forEach((item) => {
+    itemsArray.forEach((item) => {
       // Get the heading text
       const headingElement = item.querySelector(".heading-28");
       const headingText = headingElement
@@ -92,6 +95,14 @@ document.addEventListener("DOMContentLoaded", function () {
         isFirstVisible = false;
       }
     });
+
+    // Physically reorder DOM elements to show newest first
+    if (items.length > 0 && items[0].parentNode) {
+      const parent = items[0].parentNode;
+      itemsArray.forEach((item) => {
+        parent.appendChild(item);
+      });
+    }
   }
 
   // Reset filters function
