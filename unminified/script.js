@@ -306,39 +306,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const dateObject = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
     element.textContent = formatDate(dateObject);
   });
-
-  // ------------------ Reverse collection items by date (newest first) ------------------ //
-  
-  // Find all collection grids/lists that contain items with dates
-  const collectionContainers = document.querySelectorAll(
-    ".hub-grid, .w-dyn-items, [class*='collection']"
-  );
-
-  collectionContainers.forEach((container) => {
-    // Get all items within this container
-    const items = container.querySelectorAll(
-      ".w-dyn-item, .collection-item, [role='listitem']"
-    );
-
-    if (items.length > 1) {
-      // Check if items have date elements
-      const hasDateElements = Array.from(items).some(item => 
-        item.querySelector(".text-date")
-      );
-
-      if (hasDateElements) {
-        console.log(`Reversing ${items.length} items in collection`);
-        
-        // Convert NodeList to Array and reverse
-        const itemsArray = Array.from(items).reverse();
-        
-        // Reorder DOM elements
-        itemsArray.forEach((item) => {
-          container.appendChild(item);
-        });
-      }
-    }
-  });
 });
 
 // ------------------ tags color change ------------------ //

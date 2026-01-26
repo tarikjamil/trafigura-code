@@ -196,20 +196,6 @@ gsap.registerPlugin(ScrollTrigger, CustomEase),
       let i = new Date(o[2], o[0] - 1, o[1]);
       e.textContent = t(i);
     });
-    const n = document.querySelectorAll(".hub-grid, .w-dyn-items, [class*='collection']");
-    n.forEach((e) => {
-      const t = e.querySelectorAll(".w-dyn-item, .collection-item, [role='listitem']");
-      if (t.length > 1) {
-        const r = Array.from(t).some(e => e.querySelector(".text-date"));
-        if (r) {
-          console.log(`Reversing ${t.length} items in collection`);
-          const n = Array.from(t).reverse();
-          n.forEach((t) => {
-            e.appendChild(t);
-          });
-        }
-      }
-    });
   }),
   $(".is--gallery-slider").append(`
     <div class="swiper-arrows">
