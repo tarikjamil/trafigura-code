@@ -295,6 +295,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
   dateElements.forEach((element) => {
     const rawDate = element.textContent.trim();
     console.log("Original date text:", rawDate); // Debugging output
+    
+    // Check if date is already in formatted format (e.g., "February 10, 2026")
+    // If it contains a month name, skip formatting
+    const monthNames = ["January", "February", "March", "April", "May", "June", 
+                       "July", "August", "September", "October", "November", "December"];
+    const isAlreadyFormatted = monthNames.some(month => rawDate.includes(month));
+    
+    if (isAlreadyFormatted) {
+      console.log("Date already formatted, skipping:", rawDate);
+      return; // Skip formatting, date is already in correct format
+    }
+    
     // Parse the date assuming the format "M/DD/YYYY"
     const dateParts = rawDate.split("/");
     if (dateParts.length !== 3) {

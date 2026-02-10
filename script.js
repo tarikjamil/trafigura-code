@@ -184,9 +184,15 @@ gsap.registerPlugin(ScrollTrigger, CustomEase),
           } ${e.getFullYear()}`;
     }
     let r = document.querySelectorAll(".text-date");
+    const n = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     r.forEach((e) => {
       let r = e.textContent.trim();
       console.log("Original date text:", r);
+      const a = n.some(e => r.includes(e));
+      if (a) {
+        console.log("Date already formatted, skipping:", r);
+        return;
+      }
       let o = r.split("/");
       if (3 !== o.length) {
         console.error("Incorrect date format:", r),
