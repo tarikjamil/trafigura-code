@@ -320,6 +320,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
   });
 });
 
+// ------------------ copyright year update ------------------ //
+
+document.addEventListener("DOMContentLoaded", (event) => {
+  // Get the current year
+  const currentYear = new Date().getFullYear();
+  
+  // Find all elements with the class 'text-copyright'
+  const copyrightElements = document.querySelectorAll(".text-copyright");
+  
+  copyrightElements.forEach((element) => {
+    // Replace any year (20xx) with the current year
+    element.textContent = element.textContent.replace(/©\s*20\d{2}/g, `©${currentYear}`);
+  });
+});
+
 // ------------------ tags color change ------------------ //
 //
 // $(document).ready(function () {

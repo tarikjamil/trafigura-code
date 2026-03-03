@@ -203,6 +203,12 @@ gsap.registerPlugin(ScrollTrigger, CustomEase),
       e.textContent = t(i);
     });
   }),
+  document.addEventListener("DOMContentLoaded", (e) => {
+    let t = new Date().getFullYear();
+    document.querySelectorAll(".text-copyright").forEach((e) => {
+      e.textContent = e.textContent.replace(/©\s*20\d{2}/g, `©${t}`);
+    });
+  }),
   $(".is--gallery-slider").append(`
     <div class="swiper-arrows">
     <a href="/partners-stories" class="swiper-button-prev is--shadow w-inline-block"><svg class="icon-arrow" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 17.589 13.87"><path id="Trac\xe9_54632" data-name="Trac\xe9 54632" d="M8.769,0V3.97H0V9.9H8.769v3.97l8.819-6.935Z" transform="translate(17.588 13.87) rotate(180)" fill="currentColor"></path></svg></a>
