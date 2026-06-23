@@ -203,10 +203,10 @@ gsap.registerPlugin(ScrollTrigger, CustomEase),
       e.textContent = t(i);
     });
   }),
-  document.addEventListener("DOMContentLoaded", (e) => {
-    let t = new Date().getFullYear();
-    document.querySelectorAll(".text-copyright").forEach((e) => {
-      e.textContent = e.textContent.replace(/©\s*20\d{2}/g, `©${t}`);
+  document.addEventListener("DOMContentLoaded", () => {
+    const y = new Date().getFullYear();
+    document.querySelectorAll(".text-copyright").forEach((el) => {
+      el.textContent = el.textContent.replace(/\b20\d{2}\b/g, String(y));
     });
   }),
   $(".is--gallery-slider").append(`
