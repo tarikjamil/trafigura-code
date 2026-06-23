@@ -205,9 +205,11 @@ gsap.registerPlugin(ScrollTrigger, CustomEase),
   }),
   document.addEventListener("DOMContentLoaded", () => {
     const y = new Date().getFullYear();
-    document.querySelectorAll(".text-copyright").forEach((el) => {
-      el.textContent = el.textContent.replace(/\b20\d{2}\b/g, String(y));
-    });
+    document
+      .querySelectorAll(".text-copyright, .nav--contact .text-10")
+      .forEach((el) => {
+        el.textContent = el.textContent.replace(/\b20\d{2}\b/g, String(y));
+      });
   }),
   $(".is--gallery-slider").append(`
     <div class="swiper-arrows">

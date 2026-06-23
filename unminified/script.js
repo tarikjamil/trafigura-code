@@ -324,8 +324,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const currentYear = new Date().getFullYear();
+  const copyrightSelector = ".text-copyright, .nav--contact .text-10";
 
-  document.querySelectorAll(".text-copyright").forEach((element) => {
+  document.querySelectorAll(copyrightSelector).forEach((element) => {
     element.textContent = element.textContent.replace(/\b20\d{2}\b/g, String(currentYear));
   });
 });
